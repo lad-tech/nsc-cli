@@ -1,0 +1,19 @@
+{
+  "name": "nsc-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lad-tech/nsc-cli.git"
+  },
+  "author": "DevHive crew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lad-tech/nsc-cli/issues"
+  },
+  "homepage": "https://github.com/lad-tech/nsc-cli#readme"
+}
