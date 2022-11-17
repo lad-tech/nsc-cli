@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": true,
+    "strictNullChecks": true,
+    "module": "commonjs",
+    "target": "es2019",
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
+    "declarationDir": "./dist/types/",
+    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+    "strict": true                                      /* Enable all strict type-checking options. */
+  },
+  "include": ["."],
+  "exclude": ["node_modules","test"]
+}

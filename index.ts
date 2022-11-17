@@ -28,12 +28,13 @@ async function main() {
     console.log('Начинаем генерацию ', directoryPath);
     const schema: ServiceSchema = (await import(pathToSchema)).default;
 
-    await new ServiceGenerator([
+    const generator = new ServiceGenerator([
       generateInterfacesFile,
       generateMethods,
       generateIndexFile,
       generateServerFile,
-    ]).generate(schema, directoryPath);
+    ]);
+    await generator.generate(schema, directoryPath);
   } catch (err) {
     console.error(err);
     process.exit(1);

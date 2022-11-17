@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
+    "prepublish":"npm run build",
+    "build":"rm -rf dist/ && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-service": "npx ts-node ./index.ts --schema test/service.json"
   },
