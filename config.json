@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "module": "commonjs",
+    "target": "es2019",
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["es2019"],
+    "typeRoots": ["../node_modules/@types", "../@types/"]
+  },
+  "exclude": ["node_modules"]
+}
