@@ -49,7 +49,9 @@
     "url": "git+https://github.com/lad-tech/nsc-cli.git"
   },
   "author": "DevHive crew",
+
   "license": "MIT",
+  "keywords": ["@lad-tech/nsc-toolkit", "nsc-toolkit","cli","nats","service","generator"],
   "bugs": {
     "url": "https://github.com/lad-tech/nsc-cli/issues"
   },
