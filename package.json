@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "prepublish": "npm run build" ,
     "build": "rm -rf dist/ && tsc &&  chmod +x dist/cli.js  && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl",
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-service": "npx ts-node cli.ts --schema test/service.json"
