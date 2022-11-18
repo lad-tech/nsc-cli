@@ -1,14 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { ImportDeclarationStructure, Project, StructureKind } from 'ts-morph';
+import { ImportDeclarationStructure, StructureKind } from 'ts-morph';
 import { FILE_EXTENTION, SERVICE_RUN_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
-import { MiddlewareFn, ServiceSchema } from '../interfaces';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 
-export const generateServerFile: MiddlewareFn = async (
-  project: Project,
-  schema: ServiceSchema,
-  directoryPath: string,
-): Promise<void> => {
+export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
+  const { project, schema, directoryPath } = opts;
   const methodNames = Object.keys(schema.methods);
   const methodImports: ImportDeclarationStructure[] = Object.keys(schema.methods).map(name => {
     return {

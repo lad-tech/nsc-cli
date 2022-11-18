@@ -20,4 +20,10 @@ export interface ServiceSchema {
   >;
 }
 
-export type MiddlewareFn = (project: Project, schema: ServiceSchema, directoryPath: string) => Promise<void>;
+export type MiddlewareOptions = {
+  project: Project;
+  schema: ServiceSchema;
+  directoryPath: string;
+};
+
+export type MiddlewareFn = (opts: MiddlewareOptions) => Promise<void>;

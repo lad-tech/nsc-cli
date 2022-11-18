@@ -6,6 +6,7 @@ import * as path from 'path';
 import { generateIndexFile } from './files/generateIndexFile';
 import { generateInterfacesFile } from './files/generateInterfacesFile';
 import { generateMethods } from './files/generateMethods';
+import { generatePackageJson } from './files/generatePackageJson';
 import { generateServerFile } from './files/generateServerFile';
 import { ServiceSchema } from './interfaces';
 import { ServiceGenerator } from './ServiceGenerator';
@@ -33,6 +34,7 @@ async function main() {
       generateMethods,
       generateIndexFile,
       generateServerFile,
+      generatePackageJson,
     ]);
     await generator.generate(schema, directoryPath);
   } catch (err) {

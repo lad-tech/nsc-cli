@@ -1,13 +1,10 @@
 import path from 'path';
-import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, Project, StructureKind } from 'ts-morph';
+import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, StructureKind } from 'ts-morph';
 import { FILE_EXTENTION, INDEX_FILE_NAME, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
-import { MiddlewareFn, ServiceSchema } from '../interfaces';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 
-export const generateIndexFile: MiddlewareFn = async (
-  project: Project,
-  schema: ServiceSchema,
-  directoryPath: string,
-): Promise<void> => {
+export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
+  const { project, schema, directoryPath } = opts;
   const methods: OptionalKind<MethodDeclarationStructure>[] = [];
   const imports: OptionalKind<ImportSpecifierStructure>[] = [];
   for (const methodName in schema.methods) {

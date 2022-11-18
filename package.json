@@ -1,17 +1,17 @@
 {
   "name": "@lad-tech/nsc-cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "prepublish":"npm run build",
-    "build":"rm -rf dist/ && tsc",
+    "prepublish": "npm run build" ,
+    "build": "rm -rf dist/ && tsc &&  chmod +x dist/cli.js  && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-service": "npx ts-node ./index.ts --schema test/service.json"
+    "create-service": "npx ts-node cli.ts --schema test/service.json"
   },
   "bin": {
-    "nsc-cli": "index.js"
+    "nsc-cli": "/dist/cli.js"
   },
   "devDependencies": {
     "@types/node": "^17.0.42",

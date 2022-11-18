@@ -1,14 +1,11 @@
 import { compile } from 'json-schema-to-typescript';
 import path from 'path';
-import { Project } from 'ts-morph';
 import { FILE_EXTENTION, INTERFACES_FILE_NAME } from '../constants';
-import { MiddlewareFn, ServiceSchema } from '../interfaces';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 
-export const generateInterfacesFile: MiddlewareFn = async (
-  project: Project,
-  schema: ServiceSchema,
-  directoryPath: string,
-): Promise<void> => {
+export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
+  const { project, schema, directoryPath } = opts;
+
   let interfaces = '';
 
   for (const methodName in schema.methods) {

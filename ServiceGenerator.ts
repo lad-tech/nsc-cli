@@ -32,7 +32,7 @@ export class ServiceGenerator {
       });
 
       for (const fn of this.middlewares) {
-        await fn(project, schema, directoryPath);
+        await fn({ project, schema, directoryPath });
       }
       await project.save();
     } catch (err) {
