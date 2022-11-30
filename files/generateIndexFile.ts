@@ -49,12 +49,6 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           moduleSpecifier: `./${INTERFACES_FILE_NAME}`,
         },
 
-        // reexport
-        // {
-        //   kind: StructureKind.ExportDeclaration,
-        //   moduleSpecifier: `${INTERFACES_FILE_NAME}${FILE_EXTENTION}`,
-        //   namespaceExport: `${schema.name}`,
-        // },
         {
           kind: StructureKind.ImportDeclaration,
           namedImports: ['name', 'methods'],
@@ -75,9 +69,6 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           kind: StructureKind.Class,
           name: schema.name,
           ctors: [
-            // 'constructor(nats: NatsConnection, baggage?: Baggage, cacheSettings?: CacheSettings) {\n' +
-            // '    super(nats, name, baggage, cacheSettings);\n' +
-            // '  }'
             {
               kind: StructureKind.Constructor,
               statements: 'super(nats, name, baggage, cacheSettings);',

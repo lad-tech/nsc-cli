@@ -60,7 +60,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
 
   file?.addStatements([
     'main().catch(console.error);',
-    fs.readFileSync(path.resolve('./handleErrors.ts.tpl')).toString(),
+    fs.readFileSync(path.resolve(__dirname, '../handleErrors.ts.tpl')).toString(),
   ]);
 
   await file.save();
