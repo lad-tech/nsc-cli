@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import Ajv from 'ajv';
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -9,10 +10,12 @@ import { generateMethods } from './files/generateMethods';
 import { generatePackageJson } from './files/generatePackageJson';
 import { generateServerFile } from './files/generateServerFile';
 import { ServiceSchema } from './interfaces';
+import * as ValidateSchema from './schemaValidator.json';
 import { ServiceGenerator } from './ServiceGenerator';
 
 async function main() {
   try {
+    // Ajv.name
     const program = new Command();
     program.description('Генерация нового сервиса по json schema').requiredOption('--schema  <path>', 'путь до схемы');
 
@@ -24,11 +27,17 @@ async function main() {
     if (!fs.existsSync(pathToSchema)) {
       throw new Error(`${pathToSchema} не найден`);
     }
+
     const directoryPath = path.dirname(pathToSchema);
 
     console.log('Начинаем генерацию ', directoryPath);
     const schema: ServiceSchema = (await import(pathToSchema)).default;
-
+    const validate = new Ajv().compile(ValidateSchema);
+    const valid = validate(schema);
+    if (!valid) {
+      console.log(validate.errors);
+      throw new Error('validate error');
+    }
     const generator = new ServiceGenerator([
       generateInterfacesFile,
       generateMethods,

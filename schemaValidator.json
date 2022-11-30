@@ -1,0 +1,94 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "methods": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "request": {
+            "type": "object"
+          },
+          "response": {
+            "type": "object"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "cache": {
+                "type": "number"
+              },
+              "runTimeValidation": {
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "type": "boolean"
+                  },
+                  "response": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "useStream": {
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "type": "boolean"
+                  },
+                  "response": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "action",
+          "description",
+          "request",
+          "response"
+        ]
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "event": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "event"
+        ]
+      }
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "methods"
+  ]
+}

@@ -16,28 +16,34 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
     console.log();
-    if (fs.existsSync(path.join(methodsDirectoryPath, `${method.action}${FILE_EXTENTION}`))) {
+    const methodsDirectoryFolderPath = path.join(directoryPath, 'methods', methodName);
+    if (!fs.existsSync(methodsDirectoryFolderPath)) {
+      fs.mkdirSync(methodsDirectoryFolderPath);
+    }
+    const filePath = path.join(methodsDirectoryFolderPath, `index${FILE_EXTENTION}`);
+
+    if (fs.existsSync(filePath)) {
       continue;
     }
 
     project.createSourceFile(
-      path.join(methodsDirectoryPath, `${method.action}${FILE_EXTENTION}`),
+      filePath,
       {
         statements: [
           {
             kind: StructureKind.ImportDeclaration,
             isTypeOnly: true,
             namedImports: [returnType, requestType],
-            moduleSpecifier: `../${INTERFACES_FILE_NAME}`,
+            moduleSpecifier: `../../${INTERFACES_FILE_NAME}`,
           },
           {
             kind: StructureKind.ImportDeclaration,
             namedImports: ['methods'],
-            moduleSpecifier: '../service.json',
+            moduleSpecifier: '../../service.json',
           },
           {
             kind: StructureKind.ImportDeclaration,
-            namedImports: ['related', 'service', 'BaseMethod'],
+            namedImports: ['BaseMethod'],
             moduleSpecifier: TOOLKIT_MODULE_NAME,
           },
           {
@@ -66,12 +72,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
                 ],
               },
             ],
-            decorators: [
-              {
-                name: 'related',
-                kind: StructureKind.Decorator,
-              },
-            ],
+            decorators: [],
             isExported: true,
 
             extends: `BaseMethod`,

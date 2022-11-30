@@ -1,30 +1,82 @@
 {
-  "name": "Logic",
-  "description": "busines logic BFF",
+  "name": "Math",
+  "description": "Mathematics service",
   "methods": {
-    "WeirdSum": {
-      "action": "weirdsum",
-      "description": "Weird sum logic. Gets two numbers and adds them. The result is a length Fibonacci sequence. Add the sequence and get the result",
+    "Sum": {
+      "action": "sum",
+      "description": "Addition of two numbers",
+      "options": {},
+      "request": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "number"
+          },
+          "b": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "result"
+        ]
+      }
+    },
+    "Fibonacci": {
+      "action": "fibonacci",
+      "description": "Return Fibonacci sequence given length",
       "options": {
-        "cache": 5,
-        "runTimeValidation": {
-          "request": true
+        "useStream": {
+          "response": true
         }
       },
       "request": {
         "type": "object",
         "properties": {
-          "a": { "type": "number" },
-          "b": {"type": "number" }
+          "length": {
+            "type": "number"
+          }
         },
-        "required": ["a", "b"]
+        "required": [
+          "length"
+        ]
+      },
+      "response": {
+        "type": "number"
+      }
+    },
+    "SumStream": {
+      "action": "sumstream",
+      "description": "Adding all the numbers of the stream",
+      "options": {
+        "useStream": {
+          "request": true
+        }
+      },
+      "request": {
+        "type": "number"
       },
       "response": {
         "type": "object",
         "properties": {
-          "result": { "type": "number" }
+          "result": {
+            "type": "number"
+          }
         },
-        "required": ["result"]
+        "required": [
+          "result"
+        ]
       }
     }
   }

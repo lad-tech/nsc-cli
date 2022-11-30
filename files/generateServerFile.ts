@@ -11,7 +11,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     return {
       kind: StructureKind.ImportDeclaration,
       namedImports: [name],
-      moduleSpecifier: `./methods/${schema.methods[name].action}`,
+      moduleSpecifier: `./methods/${name}`,
     };
   });
 
