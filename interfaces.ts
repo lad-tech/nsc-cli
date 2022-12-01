@@ -12,11 +12,11 @@ export interface ServiceSchema {
       response: object;
       options: Partial<{
         cache: number;
-        runTimeValidation: {
+        runTimeValidation?: {
           request?: boolean;
           response?: boolean;
         };
-        useStream: {
+        useStream?: {
           request?: boolean;
           response?: boolean;
         };

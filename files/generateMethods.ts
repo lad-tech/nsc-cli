@@ -25,8 +25,8 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
     if (fs.existsSync(filePath)) {
       continue;
     }
-    const requestT = method.options.useStream?.request ? 'Readable' : requestType;
-    const returnT = method.options.useStream?.response ? 'Readable' : returnType;
+    const requestT = method?.options?.useStream?.request ? 'Readable' : requestType;
+    const returnT = method?.options?.useStream?.response ? 'Readable' : returnType;
     project.createSourceFile(
       filePath,
       {

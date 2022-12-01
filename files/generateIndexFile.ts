@@ -21,8 +21,8 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         },
       ],
     );
-    const requestT = method.options.useStream?.request ? 'Readable' : requestType;
-    const returnT = method.options.useStream?.response ? 'Readable' : returnType;
+    const requestT = method?.options?.useStream?.request ? 'Readable' : requestType;
+    const returnT = method?.options?.useStream?.response ? 'Readable' : returnType;
     methods.push({
       kind: StructureKind.Method,
       name: method.action,
