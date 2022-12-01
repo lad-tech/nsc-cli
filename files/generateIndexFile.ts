@@ -21,17 +21,19 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         },
       ],
     );
+    const requestT = method.options.useStream?.request ? 'Readable' : requestType;
+    const returnT = method.options.useStream?.response ? 'Readable' : returnType;
     methods.push({
       kind: StructureKind.Method,
       name: method.action,
       isAsync: true,
-      returnType: `Promise<${returnType}>`,
-      statements: `return this.request<${returnType}>(\`\${name}.\${methods.WeirdSum.action}\`, payload, methods.WeirdSum);`,
+      returnType: `Promise<${returnT}>`,
+      statements: `return this.request<${returnT}>(\`\${name}.\${methods.${methodName}.action}\`, payload, methods.${methodName});`,
       parameters: [
         {
           kind: StructureKind.Parameter,
           name: 'payload',
-          type: requestType,
+          type: requestT,
         },
       ],
     });
@@ -64,6 +66,11 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           isTypeOnly: true,
           namedImports: ['NatsConnection'],
           moduleSpecifier: 'nats',
+        },
+        {
+          kind: StructureKind.ImportDeclaration,
+          namedImports: ['Readable'],
+          moduleSpecifier: 'stream',
         },
         {
           kind: StructureKind.Class,

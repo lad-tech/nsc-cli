@@ -25,7 +25,8 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
     if (fs.existsSync(filePath)) {
       continue;
     }
-
+    const requestT = method.options.useStream?.request ? 'Readable' : requestType;
+    const returnT = method.options.useStream?.response ? 'Readable' : returnType;
     project.createSourceFile(
       filePath,
       {
@@ -40,6 +41,11 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
             kind: StructureKind.ImportDeclaration,
             namedImports: ['methods'],
             moduleSpecifier: '../../service.json',
+          },
+          {
+            kind: StructureKind.ImportDeclaration,
+            namedImports: ['Readable'],
+            moduleSpecifier: 'stream',
           },
           {
             kind: StructureKind.ImportDeclaration,
@@ -61,13 +67,13 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
               {
                 name: 'handler',
                 isAsync: true,
-                returnType: `Promise<${returnType}>`,
+                returnType: `Promise<${returnT}>`,
                 statements: `this.logger.info('${methodName} started'); \n // TODO WTF??? \n throw new Error('Not Implemented');`,
                 parameters: [
                   {
                     kind: StructureKind.Parameter,
                     name: 'payload',
-                    type: requestType,
+                    type: requestT,
                   },
                 ],
               },

@@ -6,7 +6,7 @@ pre-commit:
       run: npx eslint --fix {staged_files}
     types:
       glob: "*.{ts, tsx}"
-      run: npx tsc --noEmit  {staged_files}
+      run: npx tsc -p ./tsconfig.json --noEmit  {staged_files}
 commit-msg:
   parallel: true
   commands:
