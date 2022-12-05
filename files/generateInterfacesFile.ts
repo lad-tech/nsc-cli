@@ -1,11 +1,15 @@
 import { compile } from 'json-schema-to-typescript';
-import path from 'path';
+import * as path from 'path';
 import { FILE_EXTENTION, INTERFACES_FILE_NAME } from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
+import { isIgnore } from '../utils';
 
 export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;
-
+  const filePath = path.join(directoryPath, `${INTERFACES_FILE_NAME}${FILE_EXTENTION}`);
+  if (await isIgnore(directoryPath, filePath)) {
+    return;
+  }
   let interfaces = '';
 
   for (const methodName in schema.methods) {
@@ -17,7 +21,7 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     interfaces += requestInterface + '\n';
     interfaces += responseInterface + '\n';
   }
-  project.createSourceFile(path.join(directoryPath, `${INTERFACES_FILE_NAME}${FILE_EXTENTION}`), interfaces, {
+  project.createSourceFile(filePath, interfaces, {
     overwrite: true,
   });
 };

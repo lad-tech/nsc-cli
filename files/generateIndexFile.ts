@@ -1,12 +1,17 @@
-import path from 'path';
+import * as path from 'path';
 import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, StructureKind } from 'ts-morph';
 import { FILE_EXTENTION, INDEX_FILE_NAME, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
+import { isIgnore } from '../utils';
 
 export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;
   const methods: OptionalKind<MethodDeclarationStructure>[] = [];
   const imports: OptionalKind<ImportSpecifierStructure>[] = [];
+  const filePath = path.join(directoryPath, `${INDEX_FILE_NAME}${FILE_EXTENTION}`);
+  if (await isIgnore(directoryPath, filePath)) {
+    return;
+  }
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
@@ -40,7 +45,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
   }
 
   project.createSourceFile(
-    path.join(directoryPath, `${INDEX_FILE_NAME}${FILE_EXTENTION}`),
+    filePath,
     {
       statements: [
         {

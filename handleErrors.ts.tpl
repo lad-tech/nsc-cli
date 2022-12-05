@@ -1,3 +1,5 @@
+
+
 const cleanupAndExit = async () => {
   console.log('Shutdown');
   // TODO Описать отключение сервисов

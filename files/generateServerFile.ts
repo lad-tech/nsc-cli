@@ -1,8 +1,9 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ImportDeclarationStructure, StructureKind } from 'ts-morph';
 import { FILE_EXTENTION, SERVICE_RUN_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
+import { isIgnore } from '../utils';
 
 export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;
@@ -14,9 +15,14 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
       moduleSpecifier: `./methods/${name}`,
     };
   });
+  const filePath = path.join(directoryPath, `${SERVICE_RUN_FILE_NAME}${FILE_EXTENTION}`);
+  if (await isIgnore(directoryPath, filePath)) {
+    console.log('11');
+    return;
+  }
 
   const file = project.createSourceFile(
-    path.join(directoryPath, `${SERVICE_RUN_FILE_NAME}${FILE_EXTENTION}`),
+    filePath,
     {
       statements: [
         {
@@ -47,6 +53,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
    methods: [${methodNames.join(',')}],
    events: [],
  }).start();
+ 
           
           `,
           ],
@@ -59,8 +66,8 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   );
 
   file?.addStatements([
-    'main().catch(console.error);',
     fs.readFileSync(path.resolve(__dirname, '../handleErrors.ts.tpl')).toString(),
+    'main().catch(console.error);',
   ]);
 
   await file.save();
