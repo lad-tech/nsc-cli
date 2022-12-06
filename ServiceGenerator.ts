@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import { ModuleKind, Project, QuoteKind, ScriptTarget } from 'ts-morph';
 import { MiddlewareFn, ServiceSchema } from './interfaces';
@@ -26,10 +27,13 @@ export class ServiceGenerator {
         },
       });
       const tsconfig = await import(path.resolve(__dirname, 'config.json'));
-      console.log('Создаем конфигурацию ts');
-      project.createSourceFile(path.join(directoryPath, 'tsconfig.json'), JSON.stringify(tsconfig, null, 2), {
-        overwrite: true,
-      });
+
+      if (!fs.existsSync(tsconfig)) {
+        console.log('Создаем конфигурацию ts');
+        project.createSourceFile(path.join(directoryPath, 'tsconfig.json'), JSON.stringify(tsconfig, null, 2), {
+          overwrite: true,
+        });
+      }
 
       for (const fn of this.middlewares) {
         await fn({ project, schema, directoryPath });

@@ -17,7 +17,6 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   });
   const filePath = path.join(directoryPath, `${SERVICE_RUN_FILE_NAME}${FILE_EXTENTION}`);
   if (await isIgnore(directoryPath, filePath)) {
-    console.log('11');
     return;
   }
 
