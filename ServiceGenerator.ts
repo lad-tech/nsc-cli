@@ -26,11 +26,12 @@ export class ServiceGenerator {
           lib: ['es2019'],
         },
       });
-      const tsconfig = await import(path.resolve(__dirname, 'config.json'));
+      const tsconfigPath = path.join(directoryPath, 'tsconfig.json');
 
-      if (!fs.existsSync(tsconfig)) {
+      if (!fs.existsSync(tsconfigPath)) {
         console.log('Создаем конфигурацию ts');
-        project.createSourceFile(path.join(directoryPath, 'tsconfig.json'), JSON.stringify(tsconfig, null, 2), {
+        const tsconfig = await import(path.resolve(__dirname, 'config.json'));
+        project.createSourceFile(tsconfigPath, JSON.stringify(tsconfig, null, 2), {
           overwrite: true,
         });
       } else {
