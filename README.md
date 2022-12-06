@@ -39,6 +39,15 @@ Options:
 
 ```
 
+### Применение .nscignore
+
+```gitignore
+
+**/service.ts
+**/package.json
+
+```
+
 ### Схема описания сервиса ([подробности](https://github.com/lad-tech/nsc-toolkit))
 
 ```json
