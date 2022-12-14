@@ -17,10 +17,10 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
     const requestInterface = await compile(method.request, requestType, {
-      additionalProperties: false,
+
     });
     const responseInterface = await compile(method.response, returnType, {
-      additionalProperties: false,
+
     });
     interfaces += requestInterface + '\n';
     interfaces += responseInterface + '\n';
