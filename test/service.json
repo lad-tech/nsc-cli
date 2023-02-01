@@ -17,6 +17,7 @@
           }
         },
         "required": [
+          "a",
           "b"
         ]
       },
@@ -70,13 +71,65 @@
         "type": "object",
         "properties": {
           "result": {
-            "type": "number"
+            "type": "string"
           }
         },
         "required": [
           "result"
         ]
       }
+    }
+  },
+  "events": {
+    "list": {
+      "Elapsed": {
+        "action": "elapsed",
+        "options": {
+          "stream": true
+        },
+        "description": "Elapsed time to calculate stream sum",
+        "event": {
+          "type": "object",
+          "properties": {
+            "elapsed": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "elapsed"
+          ]
+        }
+      },
+      "Notify": {
+        "action": "Notify",
+        "description": "Executed method notification",
+        "event": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "method"
+          ]
+        }
+      }
+    },
+    "streamOptions": {
+      "prefix": "stream",
+      "actions": [
+        {
+          "action": "*",
+          "storage": "file",
+          "retentionPolicy": "limits",
+          "discardPolicy": "old",
+          "messageTTL": 1209600,
+          "duplicateTrackingTime": 86400,
+          "replication": 1,
+          "rollUps": true
+        }
+      ]
     }
   }
 }

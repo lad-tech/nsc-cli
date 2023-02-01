@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+import * as path from 'path';
 import { StructureKind } from 'ts-morph';
 import { FILE_EXTENTION, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
@@ -15,7 +15,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
-    console.log();
+
     const methodsDirectoryFolderPath = path.join(directoryPath, 'methods', methodName);
     if (!fs.existsSync(methodsDirectoryFolderPath)) {
       fs.mkdirSync(methodsDirectoryFolderPath);
@@ -86,6 +86,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
         ],
       },
       {
+        // scriptKind: ScriptKind.JS,
         overwrite: true,
       },
     );

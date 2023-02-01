@@ -38,14 +38,14 @@ async function main() {
       console.log(validate.errors);
       throw new Error('validate error');
     }
-    const generator = new ServiceGenerator([
+    const service = new ServiceGenerator([
       generateInterfacesFile,
       generateMethods,
       generateIndexFile,
       generateServerFile,
       generatePackageJson,
     ]);
-    await generator.generate(schema, directoryPath);
+    await service.generate(schema, directoryPath);
   } catch (err) {
     console.error(err);
     process.exit(1);
@@ -53,3 +53,6 @@ async function main() {
 }
 
 main().catch(console.error);
+
+// TODO
+// 4) Парсить gracefullshutdown и при перегенерации подставлять назад
