@@ -43,10 +43,7 @@ export class ServiceGenerator {
         await fn({ project, schema, directoryPath });
       }
 
-      // await project.save();
-      const files = project.getSourceFiles();
-
-      for (const file of files) {
+      for (const file of project.getSourceFiles()) {
         file.formatText({
           indentStyle: ts.IndentStyle.Smart,
           convertTabsToSpaces: true,
