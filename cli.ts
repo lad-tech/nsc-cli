@@ -54,5 +54,3 @@ async function main() {
 
 main().catch(console.error);
 
-// TODO
-// 4) Парсить gracefullshutdown и при перегенерации подставлять назад
