@@ -35,7 +35,6 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   if (existsFile) {
     const imports = existsFile.getImportDeclarations();
     imports.forEach(i => {
-      console.log(i.getModuleSpecifierValue());
       if (
         i.getModuleSpecifierValue().startsWith('./methods/') ||
         i.getModuleSpecifierValue().startsWith('./service.json')
@@ -60,7 +59,6 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     const events = !!ServiceArguments?.find(
       arg => (arg.getStructure() as PropertyAssignmentStructure)?.name === 'events',
     );
-    console.log(hasEvents && !events);
     if (hasEvents && !events) {
       service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.addProperties('events');
     } else {
@@ -114,32 +112,9 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
                 },
               ],
             },
-            '// Этот файл генерируется автоматически, эта переменная важна для генерации',
-            {
-              kind: StructureKind.VariableStatement,
-              declarationKind: VariableDeclarationKind.Const,
+            '// Этот файл генерируется автоматически, этот вызов важен для генерации',
 
-              declarations: [
-                {
-                  name: 'initParams',
-                  initializer: initParams,
-                },
-              ],
-            },
-            {
-              kind: StructureKind.VariableStatement,
-              declarationKind: VariableDeclarationKind.Const,
-              declarations: [
-                {
-                  name: 'service',
-                  type: 'Service',
-                  initializer: `new Service(initParams)`,
-                },
-              ],
-            },
-
-            `await service.start();     
-          `,
+            `await new Service(${initParams}).start();`,
           ],
         },
       ],
