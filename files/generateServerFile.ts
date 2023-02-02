@@ -1,5 +1,11 @@
 import * as path from 'path';
-import { ImportDeclarationStructure, StructureKind, SyntaxKind, VariableDeclarationKind } from 'ts-morph';
+import {
+  ImportDeclarationStructure,
+  PropertyAssignmentStructure,
+  StructureKind,
+  SyntaxKind,
+  VariableDeclarationKind,
+} from 'ts-morph';
 import { FILE_EXTENTION, SERVICE_RUN_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 import { isIgnore } from '../utils';
@@ -10,7 +16,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   if (await isIgnore(directoryPath, filePath)) {
     return;
   }
-  const existsFile = project.addSourceFileAtPath(filePath);
+  const existsFile = project.addSourceFileAtPathIfExists(filePath);
   const shutdown: string | undefined = '';
   const hasEvents = Object.keys(schema.events?.list || {}).length > 0;
   const methodImports: ImportDeclarationStructure[] = Object.keys(schema.methods).map(name => {
@@ -20,57 +26,47 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
       moduleSpecifier: `./methods/${name}`,
     };
   });
-  methodImports.push(
-    {
-      kind: StructureKind.ImportDeclaration,
-      namedImports: hasEvents ? ['name', 'events'] : ['name'],
-      moduleSpecifier: './service.json',
-    },
-    {
-      kind: StructureKind.ImportDeclaration,
-      namedImports: ['Service'],
-      moduleSpecifier: TOOLKIT_MODULE_NAME,
-    },
-    {
-      kind: StructureKind.ImportDeclaration,
-      namedImports: ['connect'],
-      moduleSpecifier: 'nats',
-    },
-  );
+  methodImports.push({
+    kind: StructureKind.ImportDeclaration,
+    namedImports: hasEvents ? ['name', 'events'] : ['name'],
+    moduleSpecifier: './service.json',
+  });
   const methodNames = Object.keys(schema.methods);
   if (existsFile) {
     const imports = existsFile.getImportDeclarations();
-    imports.forEach(i => i.remove());
+    imports.forEach(i => {
+      console.log(i.getModuleSpecifierValue());
+      if (
+        i.getModuleSpecifierValue().startsWith('./methods/') ||
+        i.getModuleSpecifierValue().startsWith('./service.json')
+      ) {
+        i.remove();
+      }
+    });
+
     existsFile.addImportDeclarations(methodImports);
-
-    //   shutdown = existsFile // try {
-    //     .getFunctionOrThrow('main')
-    //     .getVariableDeclarationOrThrow('initParams')
-    //     .getInitializerIfKind(SyntaxKind.ObjectLiteralExpression)
-    //     ?.getPropertyOrThrow('gracefulShutdown')
-    //     .getChildAtIndex(2)
-    //     .getFullText();
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    existsFile
+    const service = existsFile
       .getFunctionOrThrow('main')
-      .getVariableDeclarationOrThrow('initParams')
-      .getInitializerIfKind(SyntaxKind.ObjectLiteralExpression)
-      ?.getPropertyOrThrow('methods')
-      .set({
-        initializer: `[${methodNames.join(',')}]`,
-      });
-    const eventProp = existsFile
-      .getFunction('main')
-      ?.getVariableDeclaration('initParams')
-      ?.getInitializerIfKind(SyntaxKind.ObjectLiteralExpression);
-    if (hasEvents && !eventProp?.getProperty('events')) {
-      eventProp?.addProperties('events');
-    } else {
-      eventProp?.getProperty('events')?.remove();
-    }
+      .getDescendantsOfKind(SyntaxKind.NewExpression)
+      .find(ex => ex.getText().includes('Service'));
+    const ServiceArguments = service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getProperties();
 
+    const methodsArray = ServiceArguments?.find(
+      arg => (arg.getStructure() as PropertyAssignmentStructure)?.name === 'methods',
+    );
+    methodsArray?.set({
+      initializer: `[${methodNames.join(',')}]`,
+    });
+    const events = !!ServiceArguments?.find(
+      arg => (arg.getStructure() as PropertyAssignmentStructure)?.name === 'events',
+    );
+    console.log(hasEvents && !events);
+    if (hasEvents && !events) {
+      service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.addProperties('events');
+    } else {
+      service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getProperty('events')?.remove();
+    }
+    await existsFile.save();
     return;
   }
 
@@ -83,7 +79,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
       shutdown && shutdown.length
         ? shutdown
         : JSON.stringify({
-            additional: ['qwweee'],
+            additional: [],
           })
     }
   }`;
@@ -91,6 +87,16 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     filePath,
     {
       statements: [
+        {
+          kind: StructureKind.ImportDeclaration,
+          namedImports: ['Service'],
+          moduleSpecifier: TOOLKIT_MODULE_NAME,
+        },
+        {
+          kind: StructureKind.ImportDeclaration,
+          namedImports: ['connect'],
+          moduleSpecifier: 'nats',
+        },
         ...methodImports,
         {
           kind: StructureKind.Function,
@@ -108,6 +114,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
                 },
               ],
             },
+            '// Этот файл генерируется автоматически, эта переменная важна для генерации',
             {
               kind: StructureKind.VariableStatement,
               declarationKind: VariableDeclarationKind.Const,
