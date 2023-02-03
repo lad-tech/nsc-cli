@@ -74,7 +74,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     methods: [${methodNames.join(',')}],
    ${hasEvents ? 'events,' : ''}
     gracefulShutdown:${
-      shutdown && shutdown.length
+      shutdown?.length
         ? shutdown
         : JSON.stringify({
             additional: [],
