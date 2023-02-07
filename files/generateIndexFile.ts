@@ -43,7 +43,12 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
       ],
     });
   }
-
+  const hasEvents = Object.keys(schema.events?.list || {}).length > 0;
+  if (hasEvents) {
+    imports.push({
+      name: `Emitter${schema.name}External`,
+    });
+  }
   project.createSourceFile(
     filePath,
     {
@@ -58,7 +63,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
 
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: ['name', 'methods'],
+          namedImports: hasEvents ? ['name', 'methods', 'events'] : ['name', 'methods'],
           moduleSpecifier: './service.json',
         },
         {
@@ -83,11 +88,11 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           ctors: [
             {
               kind: StructureKind.Constructor,
-              statements: 'super(nats, name, baggage, cacheSettings);',
+              statements: 'super({ broker, serviceName: name, baggage, cache, events });',
               parameters: [
                 {
                   kind: StructureKind.Parameter,
-                  name: 'nats',
+                  name: 'broker',
                   type: 'NatsConnection',
                 },
                 {
@@ -98,7 +103,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
                 },
                 {
                   kind: StructureKind.Parameter,
-                  name: 'cacheSettings?',
+                  name: 'cache?',
                   type: 'CacheSettings',
                 },
               ],
@@ -107,7 +112,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           methods,
           isExported: true,
           isDefaultExport: true,
-          extends: 'Client',
+          extends: hasEvents ? `Client<Emitter${schema.name}External>` : 'Client',
         },
       ],
     },

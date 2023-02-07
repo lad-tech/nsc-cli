@@ -28,7 +28,7 @@
             "type": "object",
             "properties": {
               "cache": {
-                "type": "number"
+                "type": "integer"
               },
               "runTimeValidation": {
                 "type": "object",
@@ -64,25 +64,91 @@
       }
     },
     "events": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "event": {
-            "type": "object"
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "stream": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "event": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "action",
+              "description",
+              "event"
+            ]
           }
         },
-        "required": [
-          "name",
-          "description",
-          "event"
-        ]
+        "streamOptions": {
+          "type": "object",
+          "properties": {
+            "prefix": {
+              "type": "string"
+            },
+            "actions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string"
+                  },
+                  "storage": {
+                    "type": "string"
+                  },
+                  "retentionPolicy": {
+                    "type": "string"
+                  },
+                  "discardPolicy": {
+                    "type": "string"
+                  },
+                  "messageTTL": {
+                    "type": "integer"
+                  },
+                  "duplicateTrackingTime": {
+                    "type": "integer"
+                  },
+                  "replication": {
+                    "type": "integer"
+                  },
+                  "rollUps": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "action",
+                  "storage",
+                  "retentionPolicy",
+                  "discardPolicy",
+                  "duplicateTrackingTime",
+                  "replication",
+                  "rollUps"
+                ]
+              }
+            }
+          },
+          "required": [
+            "prefix",
+            "actions"
+          ]
+        }
       }
     }
   },

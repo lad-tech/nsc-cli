@@ -23,6 +23,33 @@ export interface ServiceSchema {
       }>;
     }
   >;
+  events?: {
+    streamOptions: {
+      prefix: string;
+      actions: {
+        action: string;
+        storage: string;
+        retentionPolicy: string;
+        discardPolicy: string;
+        messageTTL?: number;
+        duplicateTrackingTime: number;
+        replication: number;
+        rollUps: boolean;
+      };
+    };
+    list: {
+      [k: string]: {
+        action: string;
+        description: string;
+        options?: {
+          stream: boolean;
+        };
+        event: {
+          [k: string]: unknown;
+        };
+      };
+    };
+  };
 }
 
 export type MiddlewareOptions = {

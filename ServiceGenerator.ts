@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { ModuleKind, Project, QuoteKind, ScriptTarget } from 'ts-morph';
+import { ModuleKind, Project, QuoteKind, ScriptTarget, ts } from 'ts-morph';
 import { MiddlewareFn, ServiceSchema } from './interfaces';
 
 export class ServiceGenerator {
@@ -11,6 +11,7 @@ export class ServiceGenerator {
       const project = new Project({
         manipulationSettings: {
           quoteKind: QuoteKind.Single,
+          useTrailingCommas: true,
         },
         compilerOptions: {
           target: ScriptTarget.ES2021,
@@ -41,6 +42,17 @@ export class ServiceGenerator {
       for (const fn of this.middlewares) {
         await fn({ project, schema, directoryPath });
       }
+
+      for (const file of project.getSourceFiles()) {
+        file.formatText({
+          indentStyle: ts.IndentStyle.Smart,
+          convertTabsToSpaces: true,
+          baseIndentSize: 0,
+          indentSize: 2,
+          tabSize: 2,
+        });
+      }
+
       await project.save();
     } catch (err) {
       console.error(err);
