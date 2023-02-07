@@ -88,7 +88,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           ctors: [
             {
               kind: StructureKind.Constructor,
-              statements: 'super({ broker, serviceName: name, baggage, cache, events });',
+              statements: `super({ broker, serviceName: name, baggage, cache, ${hasEvents ? 'events' : ''} }); `,
               parameters: [
                 {
                   kind: StructureKind.Parameter,
