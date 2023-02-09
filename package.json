@@ -38,7 +38,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@lad-tech/nsc-toolkit": "^1.6.0",
+    "@lad-tech/nsc-toolkit": "^1.7.0",
     "@lad-tech/toolbelt": "^1.1.2",
     "@opentelemetry/api": "^1.1.0",
     "@opentelemetry/exporter-jaeger": "^1.3.1",

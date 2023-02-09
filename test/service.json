@@ -1,117 +1,588 @@
 {
-  "name": "Math",
-  "description": "Mathematics service",
+  "name": "MasterData",
+  "description": "Сервия обмена данными с 1с",
   "methods": {
-    "Sum": {
-      "action": "sum",
-      "description": "Addition of two numbers",
-      "options": {},
+    "CreateOrder": {
+      "action": "CreateOrder",
+      "description": "Создать заказа",
       "request": {
         "type": "object",
         "properties": {
-          "a": {
-            "type": "number"
-          },
-          "b": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "a",
-          "b"
-        ]
-      },
-      "response": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "result"
-        ]
-      }
-    },
-    "Fibonacci": {
-      "action": "fibonacci",
-      "description": "Return Fibonacci sequence given length",
-      "options": {
-        "useStream": {
-          "response": true
-        }
-      },
-      "request": {
-        "type": "object",
-        "properties": {
-          "length": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "length"
-        ]
-      },
-      "response": {
-        "type": "number"
-      }
-    },
-    "SumStream": {
-      "action": "sumstream",
-      "description": "Adding all the numbers of the stream",
-      "options": {
-        "useStream": {
-          "request": true
-        }
-      },
-      "request": {
-        "type": "number"
-      },
-      "response": {
-        "type": "object",
-        "properties": {
-          "result": {
+          "id": {
             "type": "string"
           }
         },
         "required": [
-          "result"
+          "id"
+        ]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
         ]
       }
     }
   },
   "events": {
     "list": {
-      "Elapsed": {
-        "action": "elapsed",
+      "New": {
+        "action": "New",
         "options": {
           "stream": true
         },
-        "description": "Elapsed time to calculate stream sum",
+        "description": "Создание нового заказа в системе",
         "event": {
           "type": "object",
           "properties": {
-            "elapsed": {
+            "id": {
+              "type": "string"
+            },
+            "orderId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "N"
+              ]
+            },
+            "subStatus": {
+              "type": "string",
+              "enum": [
+                "awaiting_confirmation"
+              ]
+            },
+            "partnerId": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "organization": {
+              "type": "string"
+            },
+            "inn": {
               "type": "number"
-            }
-          },
-          "required": [
-            "elapsed"
-          ]
-        }
-      },
-      "Notify": {
-        "action": "Notify",
-        "description": "Executed method notification",
-        "event": {
-          "type": "object",
-          "properties": {
-            "method": {
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "transactions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "REGISTER_POSITION"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "n"
+                    ]
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "articul": {
+                    "type": "string"
+                  },
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "info": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "fullName": {
+                        "type": "string"
+                      },
+                      "brand": {
+                        "type": "string"
+                      },
+                      "manufacturer": {
+                        "type": "string"
+                      },
+                      "measure": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "quantity": {
+                    "type": "number"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "partnerPrice": {
+                    "type": "number"
+                  },
+                  "totalSum": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "status",
+                  "code",
+                  "articul",
+                  "barcode",
+                  "quantity",
+                  "price",
+                  "partnerPrice",
+                  "totalSum"
+                ]
+              }
+            },
+            "totalSum": {
+              "type": "number"
+            },
+            "totalDiscountSum": {
+              "type": "number"
+            },
+            "resultSum": {
+              "type": "number"
+            },
+            "deliveryAddress": {
+              "type": "string"
+            },
+            "deliveryPrice": {
+              "type": "number"
+            },
+            "createdBy": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "p",
+                    "pe"
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "surname": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "patronymic": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "name",
+                "surname",
+                "email"
+              ]
+            },
+            "created": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "UTSOffsetInHours": {
+              "type": "number"
+            },
+            "comment": {
               "type": "string"
             }
           },
           "required": [
-            "method"
+            "id",
+            "orderId",
+            "partnerId",
+            "externalId",
+            "organization",
+            "inn",
+            "name",
+            "email",
+            "transactions",
+            "totalSum",
+            "totalDiscountSum",
+            "resultSum",
+            "deliveryAddress",
+            "createdBy",
+            "created",
+            "UTSOffsetInHours"
+          ]
+        }
+      },
+      "Update": {
+        "action": "Update",
+        "options": {
+          "stream": true
+        },
+        "description": "Обновление заказа",
+        "event": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "orderId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "U",
+                "C",
+                "F"
+              ]
+            },
+            "subStatus": {
+              "type": "string",
+              "enum": [
+                "work_in_progress",
+                "write_error",
+                "cancel",
+                "finish"
+              ]
+            },
+            "partnerId": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "organization": {
+              "type": "string"
+            },
+            "inn": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "transactions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "REGISTER_POSITION"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "n",
+                      "u",
+                      "c",
+                      "f"
+                    ]
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "articul": {
+                    "type": "string"
+                  },
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "info": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "fullName": {
+                        "type": "string"
+                      },
+                      "brand": {
+                        "type": "string"
+                      },
+                      "manufacturer": {
+                        "type": "string"
+                      },
+                      "measure": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "quantity": {
+                    "type": "number"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "partnerPrice": {
+                    "type": "number"
+                  },
+                  "totalSum": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "status",
+                  "code",
+                  "articul",
+                  "barcode",
+                  "quantity",
+                  "price",
+                  "partnerPrice",
+                  "totalSum"
+                ]
+              }
+            },
+            "totalSum": {
+              "type": "number"
+            },
+            "totalDiscountSum": {
+              "type": "number"
+            },
+            "resultSum": {
+              "type": "number"
+            },
+            "deliveryAddress": {
+              "type": "string"
+            },
+            "deliveryPrice": {
+              "type": "number"
+            },
+            "createdBy": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "p",
+                    "pe"
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "surname": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "patronymic": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "name",
+                "surname",
+                "email"
+              ]
+            },
+            "created": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "UTSOffsetInHours": {
+              "type": "number"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "changes": {
+              "type": "object",
+              "properties": {
+                "createdBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "p",
+                        "pe",
+                        "e"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "surname": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "patronymic": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "name",
+                    "surname",
+                    "email"
+                  ]
+                },
+                "UTSOffsetInHours": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "U",
+                    "C",
+                    "F"
+                  ]
+                },
+                "subStatus": {
+                  "type": "string",
+                  "enum": [
+                    "work_in_progress",
+                    "write_error",
+                    "cancel",
+                    "finish"
+                  ]
+                },
+                "transactions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "REGISTER_POSITION"
+                        ]
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "n",
+                          "u",
+                          "c",
+                          "f"
+                        ]
+                      },
+                      "code": {
+                        "type": "string"
+                      },
+                      "articul": {
+                        "type": "string"
+                      },
+                      "barcode": {
+                        "type": "string"
+                      },
+                      "info": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "fullName": {
+                            "type": "string"
+                          },
+                          "brand": {
+                            "type": "string"
+                          },
+                          "manufacturer": {
+                            "type": "string"
+                          },
+                          "measure": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "quantity": {
+                        "type": "number"
+                      },
+                      "price": {
+                        "type": "number"
+                      },
+                      "partnerPrice": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type"
+                    ]
+                  }
+                },
+                "deliveryAddress": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "createdBy",
+                "UTSOffsetInHours"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "orderId",
+            "partnerId",
+            "externalId",
+            "organization",
+            "inn",
+            "name",
+            "email",
+            "transactions",
+            "totalSum",
+            "totalDiscountSum",
+            "resultSum",
+            "deliveryAddress",
+            "createdBy",
+            "created",
+            "UTSOffsetInHours",
+            "change"
           ]
         }
       }

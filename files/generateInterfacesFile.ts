@@ -46,7 +46,8 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
       isStream,
     });
   }
-  let externalEvents = `export interface Emitter${schema.name}External{ \n`;
+
+  let externalEvents = `export interface Emitter${schema.name}External extends Emitter{ \n`;
   let internalEvents = `export interface Emitter${schema.name}{ \n`;
 
   generalEventsData.forEach(e => {
@@ -55,18 +56,22 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
   });
   externalEvents += '} \n';
   internalEvents += '} \n';
-  interfaces += internalEvents + '\n' + externalEvents + '\n';
+  if (generalEventsData.length) {
+    interfaces += internalEvents + '\n' + externalEvents + '\n';
+  }
 
   const file = project.createSourceFile(filePath, '', {
     overwrite: true,
   });
   file.addStatements([
-    {
-      kind: StructureKind.ImportDeclaration,
-      isTypeOnly: true,
-      namedImports: ['EventHandler', 'EventStreamHandler'],
-      moduleSpecifier: `@lad-tech/nsc-toolkit`,
-    },
+    generalEventsData.length
+      ? {
+          kind: StructureKind.ImportDeclaration,
+          isTypeOnly: true,
+          namedImports: ['EventHandler', 'EventStreamHandler', 'Emitter'],
+          moduleSpecifier: `@lad-tech/nsc-toolkit`,
+        }
+      : '',
     '\n/**\n' +
       ' * Данный файл сгенерирован автоматически. Для модификации интерфейсов исправьте схему сервиса\n' +
       ' */',
