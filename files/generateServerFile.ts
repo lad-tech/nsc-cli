@@ -124,7 +124,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     },
   );
 
-  file?.addStatements([]);
+  file?.addStatements(['main().catch(console.error);']);
 
   await file.save();
 };

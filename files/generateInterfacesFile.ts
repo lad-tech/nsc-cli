@@ -55,7 +55,7 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     internalEvents += `${e.name}: (params: ${e.interfaceName}) => void;\n`;
   });
   externalEvents += '} \n';
-  internalEvents += '} \n';
+  internalEvents += ' \n [eventName: string]: (params: any) => void; \n } \n';
   if (generalEventsData.length) {
     interfaces += internalEvents + '\n' + externalEvents + '\n';
   }
