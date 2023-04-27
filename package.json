@@ -2,17 +2,16 @@
   "name": "@lad-tech/nsc-cli",
   "version": "0.7.5",
   "description": "",
-  "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "copyData": "cp schemaValidator.json dist/schemaValidator.json && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl && cp config.json dist/config.json",
     "build": "rm -rf dist/ && tsc &&  chmod +x dist/cli.js && npm run copyData ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-service": "npx ts-node cli.ts --schema test/service.json",
+    "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema test/service.json",
     "semantic-release": "semantic-release"
   },
   "bin": {
-    "nsc-cli": "/dist/cli.js"
+    "nsc-cli": "/dist/v2/cli/service-cli.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",

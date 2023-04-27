@@ -90,8 +90,7 @@ module.exports = {
         esSpecCompliant: true,
       },
     ],
-    // Ширяев исправит )
-    'no-prototype-builtins': [1],
+
     '@typescript-eslint/no-non-null-assertion': [1],
   },
   settings: {
