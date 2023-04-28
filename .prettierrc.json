@@ -6,5 +6,5 @@
   "useTabs": false,
   "printWidth": 120,
   "semi": true,
-  "parser": "babel"
+  "parser": "typescript"
 }
