@@ -5,5 +5,6 @@
   "bracketSpacing": true,
   "useTabs": false,
   "printWidth": 120,
-  "semi": true
+  "semi": true,
+  "parser": "typescript"
 }

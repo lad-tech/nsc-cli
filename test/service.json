@@ -1,589 +1,91 @@
 {
-  "name": "MasterData",
-  "description": "Сервия обмена данными с 1с",
+  "name": "Math",
+  "description": "Mathematics service",
   "methods": {
-    "CreateOrder": {
-      "action": "CreateOrder",
-      "description": "Создать заказа",
+    "Sum": {
+      "action": "sum",
+      "description": "Addition of two numbers",
+      "options": {},
       "request": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          }
+          "a": { "type": "string", "enum": ["test1", "test2"] },
+          "b": { "type": "number" }
         },
-        "required": [
-          "id"
-        ]
+        "required": ["a", "b"]
       },
       "response": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string"
-          }
+          "result": { "type": "number" }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["result"]
+      }
+    },
+    "Fibonacci": {
+      "action": "fibonacci",
+      "description": "Return Fibonacci sequence given length",
+      "options": {
+        "useStream": {
+          "response": true
+        }
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "length": { "type": "number" }
+        },
+        "required": ["length"]
+      },
+      "response": {
+        "type": "number"
+      }
+    },
+    "SumStream": {
+      "action": "sumstream",
+      "description": "Adding all the numbers of the stream",
+      "options": {
+        "useStream": {
+          "request": true
+        }
+      },
+      "request": {
+        "type": "number"
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "result": { "type": "number" }
+        },
+        "required": ["result"]
       }
     }
   },
   "events": {
     "list": {
-      "New": {
-        "action": "New",
+      "Elapsed": {
+        "action": "elapsed",
         "options": {
           "stream": true
         },
-        "description": "Создание нового заказа в системе",
+        "description": "Elapsed time to calculate stream sum",
         "event": {
           "type": "object",
           "properties": {
-            "id": {
-              "type": "string"
-            },
-            "orderId": {
-              "type": "string"
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "N"
-              ]
-            },
-            "subStatus": {
-              "type": "string",
-              "enum": [
-                "awaiting_confirmation"
-              ]
-            },
-            "partnerId": {
-              "type": "string"
-            },
-            "externalId": {
-              "type": "string"
-            },
-            "organization": {
-              "type": "string"
-            },
-            "inn": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            },
-            "transactions": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "REGISTER_POSITION"
-                    ]
-                  },
-                  "status": {
-                    "type": "string",
-                    "enum": [
-                      "n"
-                    ]
-                  },
-                  "code": {
-                    "type": "string"
-                  },
-                  "articul": {
-                    "type": "string"
-                  },
-                  "barcode": {
-                    "type": "string"
-                  },
-                  "info": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "fullName": {
-                        "type": "string"
-                      },
-                      "brand": {
-                        "type": "string"
-                      },
-                      "manufacturer": {
-                        "type": "string"
-                      },
-                      "measure": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "quantity": {
-                    "type": "number"
-                  },
-                  "price": {
-                    "type": "number"
-                  },
-                  "partnerPrice": {
-                    "type": "number"
-                  },
-                  "totalSum": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "id",
-                  "type",
-                  "status",
-                  "code",
-                  "articul",
-                  "barcode",
-                  "quantity",
-                  "price",
-                  "partnerPrice",
-                  "totalSum"
-                ]
-              }
-            },
-            "totalSum": {
-              "type": "number"
-            },
-            "totalDiscountSum": {
-              "type": "number"
-            },
-            "resultSum": {
-              "type": "number"
-            },
-            "deliveryAddress": {
-              "type": "string"
-            },
-            "deliveryPrice": {
-              "type": "number"
-            },
-            "createdBy": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "p",
-                    "pe"
-                  ]
-                },
-                "name": {
-                  "type": "string"
-                },
-                "surname": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string"
-                },
-                "patronymic": {
-                  "type": "string"
-                },
-                "phone": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "type",
-                "name",
-                "surname",
-                "email"
-              ]
-            },
-            "created": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "UTSOffsetInHours": {
-              "type": "number"
-            },
-            "comment": {
-              "type": "string"
-            }
+            "elapsed": { "type": "number" }
           },
-          "required": [
-            "id",
-            "orderId",
-            "partnerId",
-            "externalId",
-            "organization",
-            "inn",
-            "name",
-            "email",
-            "transactions",
-            "totalSum",
-            "totalDiscountSum",
-            "resultSum",
-            "deliveryAddress",
-            "createdBy",
-            "created",
-            "UTSOffsetInHours"
-          ]
+          "required": ["elapsed"]
         }
       },
-      "Update": {
-        "action": "Update",
-        "options": {
-          "stream": true
-        },
-        "description": "Обновление заказа",
+      "Notify": {
+        "action": "Notify",
+        "description": "Executed method notification",
         "event": {
           "type": "object",
           "properties": {
-            "id": {
-              "type": "string"
-            },
-            "orderId": {
-              "type": "string"
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "U",
-                "C",
-                "F"
-              ]
-            },
-            "subStatus": {
-              "type": "string",
-              "enum": [
-                "work_in_progress",
-                "write_error",
-                "cancel",
-                "finish"
-              ]
-            },
-            "partnerId": {
-              "type": "string"
-            },
-            "externalId": {
-              "type": "string"
-            },
-            "organization": {
-              "type": "string"
-            },
-            "inn": {
-              "type": "number"
-            },
-            "name": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            },
-            "transactions": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "REGISTER_POSITION"
-                    ]
-                  },
-                  "status": {
-                    "type": "string",
-                    "enum": [
-                      "n",
-                      "u",
-                      "c",
-                      "f"
-                    ]
-                  },
-                  "code": {
-                    "type": "string"
-                  },
-                  "articul": {
-                    "type": "string"
-                  },
-                  "barcode": {
-                    "type": "string"
-                  },
-                  "info": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "fullName": {
-                        "type": "string"
-                      },
-                      "brand": {
-                        "type": "string"
-                      },
-                      "manufacturer": {
-                        "type": "string"
-                      },
-                      "measure": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "quantity": {
-                    "type": "number"
-                  },
-                  "price": {
-                    "type": "number"
-                  },
-                  "partnerPrice": {
-                    "type": "number"
-                  },
-                  "totalSum": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "id",
-                  "type",
-                  "status",
-                  "code",
-                  "articul",
-                  "barcode",
-                  "quantity",
-                  "price",
-                  "partnerPrice",
-                  "totalSum"
-                ]
-              }
-            },
-            "totalSum": {
-              "type": "number"
-            },
-            "totalDiscountSum": {
-              "type": "number"
-            },
-            "resultSum": {
-              "type": "number"
-            },
-            "deliveryAddress": {
-              "type": "string"
-            },
-            "deliveryPrice": {
-              "type": "number"
-            },
-            "createdBy": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "p",
-                    "pe"
-                  ]
-                },
-                "name": {
-                  "type": "string"
-                },
-                "surname": {
-                  "type": "string"
-                },
-                "email": {
-                  "type": "string"
-                },
-                "patronymic": {
-                  "type": "string"
-                },
-                "phone": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "type",
-                "name",
-                "surname",
-                "email"
-              ]
-            },
-            "created": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "UTSOffsetInHours": {
-              "type": "number"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "changes": {
-              "type": "object",
-              "properties": {
-                "createdBy": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "p",
-                        "pe",
-                        "e"
-                      ]
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "surname": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "patronymic": {
-                      "type": "string"
-                    },
-                    "phone": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "type",
-                    "name",
-                    "surname",
-                    "email"
-                  ]
-                },
-                "UTSOffsetInHours": {
-                  "type": "number"
-                },
-                "status": {
-                  "type": "string",
-                  "enum": [
-                    "U",
-                    "C",
-                    "F"
-                  ]
-                },
-                "subStatus": {
-                  "type": "string",
-                  "enum": [
-                    "work_in_progress",
-                    "write_error",
-                    "cancel",
-                    "finish"
-                  ]
-                },
-                "transactions": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "REGISTER_POSITION"
-                        ]
-                      },
-                      "status": {
-                        "type": "string",
-                        "enum": [
-                          "n",
-                          "u",
-                          "c",
-                          "f"
-                        ]
-                      },
-                      "code": {
-                        "type": "string"
-                      },
-                      "articul": {
-                        "type": "string"
-                      },
-                      "barcode": {
-                        "type": "string"
-                      },
-                      "info": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "fullName": {
-                            "type": "string"
-                          },
-                          "brand": {
-                            "type": "string"
-                          },
-                          "manufacturer": {
-                            "type": "string"
-                          },
-                          "measure": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "quantity": {
-                        "type": "number"
-                      },
-                      "price": {
-                        "type": "number"
-                      },
-                      "partnerPrice": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "type"
-                    ]
-                  }
-                },
-                "deliveryAddress": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "createdBy",
-                "UTSOffsetInHours"
-              ]
-            }
+            "method": { "type": "string" }
           },
-          "required": [
-            "id",
-            "orderId",
-            "partnerId",
-            "externalId",
-            "organization",
-            "inn",
-            "name",
-            "email",
-            "transactions",
-            "totalSum",
-            "totalDiscountSum",
-            "resultSum",
-            "deliveryAddress",
-            "createdBy",
-            "created",
-            "UTSOffsetInHours",
-            "change"
-          ]
+          "required": ["method"]
         }
       }
     },
