@@ -5,7 +5,7 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "copyData": "cp schemaValidator.json dist/schemaValidator.json && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl && cp config.json dist/config.json",
-    "build": "rm -rf dist/ && tsc &&  chmod +x dist/cli.js && npm run copyData ",
+    "build": "rm -rf dist/ && tsc &&  chmod +x dist/v2/cli/service-cli.js && npm run copyData ",
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema test/service.json",
     "semantic-release": "semantic-release"
