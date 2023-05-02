@@ -21,7 +21,7 @@ export class MicroService extends GeneratorAbstract {
 
   public async generate(settings: GeneratorSettings) {
     try {
-      const { schema, directoryPath } = settings;
+      const { schema, directoryPath, schemaFileName } = settings;
       const project = new Project(DefaultProjectSettings);
       const tsconfigPath = path.join(directoryPath, 'tsconfig.json');
       //  ts-config
@@ -31,7 +31,7 @@ export class MicroService extends GeneratorAbstract {
         });
       }
       for (const fn of this.middlewares) {
-        await fn({ project, schema, directoryPath });
+        await fn({ project, schema, directoryPath, schemaFileName });
       }
       await project.save();
       console.log('Generation completed successfully, format style');

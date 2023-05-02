@@ -4,6 +4,7 @@ export interface GeneratorSettings {
   schema: ServiceSchema;
   directoryPath: string;
   prettierConfigPath?: string;
+  schemaFileName: string;
 }
 
 export abstract class GeneratorAbstract {

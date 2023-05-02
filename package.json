@@ -7,7 +7,7 @@
     "copyData": "cp schemaValidator.json dist/schemaValidator.json && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl && cp config.json dist/config.json",
     "build": "rm -rf dist/ && tsc &&  chmod +x dist/v2/cli/service-cli.js && npm run copyData ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema test/service.json",
+    "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema test/service.schema.json",
     "semantic-release": "semantic-release"
   },
   "bin": {

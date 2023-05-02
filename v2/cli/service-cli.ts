@@ -26,6 +26,7 @@ async function main() {
     }
 
     const directoryPath = path.dirname(pathToSchema);
+    const schemaFileName = `${path.basename(pathToSchema)}`;
 
     console.log('Start generation in ', directoryPath);
 
@@ -41,6 +42,7 @@ async function main() {
       schema,
       directoryPath,
       prettierConfigPath,
+      schemaFileName,
     });
   } catch (err) {
     console.error(err);

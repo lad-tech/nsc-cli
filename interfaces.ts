@@ -56,6 +56,7 @@ export type MiddlewareOptions = {
   project: Project;
   schema: ServiceSchema;
   directoryPath: string;
+  schemaFileName: string;
 };
 
 export type MiddlewareFn = (opts: MiddlewareOptions) => Promise<void>;

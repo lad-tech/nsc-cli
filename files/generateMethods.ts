@@ -40,7 +40,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
           {
             kind: StructureKind.ImportDeclaration,
             namedImports: ['methods'],
-            moduleSpecifier: '../../service.json',
+            moduleSpecifier: `../../${opts.schemaFileName}`,
           },
           {
             kind: StructureKind.ImportDeclaration,

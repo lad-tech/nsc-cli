@@ -29,7 +29,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   methodImports.push({
     kind: StructureKind.ImportDeclaration,
     namedImports: hasEvents ? ['name', 'events'] : ['name'],
-    moduleSpecifier: './service.json',
+    moduleSpecifier: `./${opts.schemaFileName}`,
   });
   const methodNames = Object.keys(schema.methods);
   if (existsFile) {
@@ -37,7 +37,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     imports.forEach(i => {
       if (
         i.getModuleSpecifierValue().startsWith('./methods/') ||
-        i.getModuleSpecifierValue().startsWith('./service.json')
+        i.getModuleSpecifierValue().startsWith(`./${opts.schemaFileName}`)
       ) {
         i.remove();
       }

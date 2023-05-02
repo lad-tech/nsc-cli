@@ -5,7 +5,7 @@ import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 import { isIgnore } from '../utils';
 
 export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
-  const { project, schema, directoryPath } = opts;
+  const { project, schema, directoryPath, schemaFileName } = opts;
   const methods: OptionalKind<MethodDeclarationStructure>[] = [];
   const imports: OptionalKind<ImportSpecifierStructure>[] = [];
   const filePath = path.join(directoryPath, `${INDEX_FILE_NAME}${FILE_EXTENTION}`);
@@ -64,7 +64,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         {
           kind: StructureKind.ImportDeclaration,
           namedImports: hasEvents ? ['name', 'methods', 'events'] : ['name', 'methods'],
-          moduleSpecifier: './service.json',
+          moduleSpecifier: `./${schemaFileName}`,
         },
         {
           kind: StructureKind.ImportDeclaration,
