@@ -62,7 +62,6 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     } else {
       service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getProperty('events')?.remove();
     }
-    console.log(service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getText());
 
     await existsFile.save();
   } else {
