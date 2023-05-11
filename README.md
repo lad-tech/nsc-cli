@@ -1,3 +1,5 @@
+[![NPM](https://nodei.co/npm/nsc-cli.png)](https://nodei.co/npm/nsc-cli/)
+
 # Генерация нового сервиса по схеме. Создана для быстрой генерации сервисов с использованием [nsc-toolkit](https://github.com/lad-tech/nsc-toolkit)
 
 ## Возможности
