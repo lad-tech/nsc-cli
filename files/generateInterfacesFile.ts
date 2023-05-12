@@ -17,17 +17,37 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
+    const refPath = path.resolve(directoryPath, 'schemas');
+
     const requestInterface = await compile(method.request, requestType, {
       bannerComment: '',
+      additionalProperties: true,
+      strictIndexSignatures: true,
+      cwd: refPath,
+      $refOptions: {
+        parse: {
+          json: true,
+        },
+      },
     });
+
     const responseInterface = await compile(method.response, returnType, {
       bannerComment: '',
+      additionalProperties: true,
+      strictIndexSignatures: true,
+      cwd: refPath,
+
+      $refOptions: {
+        parse: {
+          json: true,
+        },
+      },
     });
     interfaces += requestInterface + '\n';
     interfaces += responseInterface + '\n';
   }
+
   const events = schema.events?.list || {};
-  const eventsData = [];
   const generalEventsData: Array<{ name: string; interfaceName: string; isStream: boolean }> = [];
   for (const eventName in events) {
     const event = events[eventName];

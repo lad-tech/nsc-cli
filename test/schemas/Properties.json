@@ -1,0 +1,16 @@
+{
+  "$id": "Properties.json",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "numerable": {
+      "type": "number"
+    },
+    "custom": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

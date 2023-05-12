@@ -9,17 +9,32 @@
       "request": {
         "type": "object",
         "properties": {
-          "a": { "type": "string", "enum": ["test1", "test2"] },
-          "b": { "type": "number" }
+          "a": {
+            "type": "number"
+          },
+          "test": {
+            "$ref": "Properties.json#/definitions/custom"
+
+          },
+          "b": {
+            "type": "number"
+          }
         },
-        "required": ["a", "b"]
+        "required": [
+          "a",
+          "b"
+        ]
       },
       "response": {
         "type": "object",
         "properties": {
-          "result": { "type": "number" }
+          "result": {
+            "type": "number"
+          }
         },
-        "required": ["result"]
+        "required": [
+          "result"
+        ]
       }
     },
     "Fibonacci": {
@@ -33,9 +48,13 @@
       "request": {
         "type": "object",
         "properties": {
-          "length": { "type": "number" }
+          "length": {
+            "type": "number"
+          }
         },
-        "required": ["length"]
+        "required": [
+          "length"
+        ]
       },
       "response": {
         "type": "number"
@@ -55,54 +74,18 @@
       "response": {
         "type": "object",
         "properties": {
-          "result": { "type": "number" }
+          "result": {
+            "type": "number"
+          }
         },
-        "required": ["result"]
+        "required": [
+          "result"
+        ]
       }
-    }
-  },
-  "events": {
-    "list": {
-      "Elapsed": {
-        "action": "elapsed",
-        "options": {
-          "stream": true
-        },
-        "description": "Elapsed time to calculate stream sum",
-        "event": {
-          "type": "object",
-          "properties": {
-            "elapsed": { "type": "number" }
-          },
-          "required": ["elapsed"]
-        }
-      },
-      "Notify": {
-        "action": "Notify",
-        "description": "Executed method notification",
-        "event": {
-          "type": "object",
-          "properties": {
-            "method": { "type": "string" }
-          },
-          "required": ["method"]
-        }
-      }
-    },
-    "streamOptions": {
-      "prefix": "stream",
-      "actions": [
-        {
-          "action": "*",
-          "storage": "file",
-          "retentionPolicy": "limits",
-          "discardPolicy": "old",
-          "messageTTL": 1209600,
-          "duplicateTrackingTime": 86400,
-          "replication": 1,
-          "rollUps": true
-        }
-      ]
     }
   }
 }
+
+
+
+
