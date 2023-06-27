@@ -12,36 +12,32 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     return;
   }
   let interfaces = '';
-
+  const ref = schema.Ref ? { [schema.Ref['$id']]: schema.Ref } : {};
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
-    const refPath = path.resolve(directoryPath, 'schemas');
+    // const refPath = path.resolve(directoryPath, 'schemas');
 
-    const requestInterface = await compile(method.request, requestType, {
+    const requestInterface = await compile({ ...method.request, ...ref }, requestType, {
       bannerComment: '',
       additionalProperties: true,
       strictIndexSignatures: true,
-      cwd: refPath,
+
       $refOptions: {
+        resolve: {
+          file: schema.Ref || {},
+        },
         parse: {
           json: true,
         },
       },
     });
 
-    const responseInterface = await compile(method.response, returnType, {
+    const responseInterface = await compile({ ...method.response, ...ref }, returnType, {
       bannerComment: '',
       additionalProperties: true,
       strictIndexSignatures: true,
-      cwd: refPath,
-
-      $refOptions: {
-        parse: {
-          json: true,
-        },
-      },
     });
     interfaces += requestInterface + '\n';
     interfaces += responseInterface + '\n';

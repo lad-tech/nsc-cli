@@ -3,6 +3,7 @@ import { Project } from 'ts-morph';
 export interface ServiceSchema {
   name: string;
   description: string;
+  Ref?: any;
   methods: Record<
     string,
     {
