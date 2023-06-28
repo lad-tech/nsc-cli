@@ -97,4 +97,13 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
       ' */',
     interfaces,
   ]);
+  file.fixUnusedIdentifiers();
+  const interfaceDeclarationSet = new Set<string>();
+  file.getInterfaces().forEach(i => {
+    const name = i.getName();
+    if (interfaceDeclarationSet.has(name)) {
+      i.remove();
+    }
+    interfaceDeclarationSet.add(name);
+  });
 };
