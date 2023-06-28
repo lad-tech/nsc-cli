@@ -1,4 +1,6 @@
+import fs from 'fs/promises';
 import { compile } from 'json-schema-to-typescript';
+import * as Path from 'path';
 import * as path from 'path';
 import { StructureKind } from 'ts-morph';
 import { FILE_EXTENTION, INTERFACES_FILE_NAME } from '../constants';
@@ -12,22 +14,40 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     return;
   }
   let interfaces = '';
-
+  const refPath = path.resolve(directoryPath);
+  if (schema.Ref?.['$id']) {
+    const RefSchemaName = Path.resolve(refPath, schema.Ref['$id']);
+    await fs.writeFile(RefSchemaName, JSON.stringify(schema.Ref, null, 2));
+  }
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
+
     const requestInterface = await compile(method.request, requestType, {
       bannerComment: '',
+      additionalProperties: true,
+      strictIndexSignatures: true,
+      cwd: refPath,
+      $refOptions: {},
     });
+
     const responseInterface = await compile(method.response, returnType, {
       bannerComment: '',
+      additionalProperties: true,
+      strictIndexSignatures: true,
+      cwd: refPath,
+      $refOptions: {},
     });
     interfaces += requestInterface + '\n';
     interfaces += responseInterface + '\n';
   }
+  if (schema.Ref?.['$id']) {
+    const RefSchemaName = Path.resolve(refPath, schema.Ref['$id']);
+    await fs.rm(RefSchemaName);
+  }
+
   const events = schema.events?.list || {};
-  const eventsData = [];
   const generalEventsData: Array<{ name: string; interfaceName: string; isStream: boolean }> = [];
   for (const eventName in events) {
     const event = events[eventName];

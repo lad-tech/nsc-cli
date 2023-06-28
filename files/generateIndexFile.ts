@@ -44,11 +44,17 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
     });
   }
   const hasEvents = Object.keys(schema.events?.list || {}).length > 0;
+  const importFields = ['name', 'methods'];
   if (hasEvents) {
     imports.push({
       name: `Emitter${schema.name}External`,
     });
+    importFields.push('events');
   }
+  if (schema.Ref?.$id) {
+    importFields.push('Ref');
+  }
+
   project.createSourceFile(
     filePath,
     {
@@ -63,7 +69,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
 
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: hasEvents ? ['name', 'methods', 'events'] : ['name', 'methods'],
+          namedImports: importFields,
           moduleSpecifier: `./${schemaFileName}`,
         },
         {
@@ -88,7 +94,9 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           ctors: [
             {
               kind: StructureKind.Constructor,
-              statements: `super({ broker, serviceName: name, baggage, cache, ${hasEvents ? 'events' : ''} }); `,
+              statements: `super({ broker, serviceName: name, baggage, cache ${hasEvents ? ',events' : ''} ${
+                schema.Ref?.$id ? ',Ref' : ''
+              } }); `,
               parameters: [
                 {
                   kind: StructureKind.Parameter,
