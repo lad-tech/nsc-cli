@@ -1,9 +1,13 @@
 import { Project } from 'ts-morph';
 
+type JsonSchemaLike = {
+  $id: string;
+  [key: string]: unknown;
+};
 export interface ServiceSchema {
   name: string;
   description: string;
-  Ref?: any;
+  Ref?: JsonSchemaLike;
   methods: Record<
     string,
     {

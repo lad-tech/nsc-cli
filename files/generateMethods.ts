@@ -86,7 +86,6 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
         ],
       },
       {
-        // scriptKind: ScriptKind.JS,
         overwrite: true,
       },
     );

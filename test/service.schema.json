@@ -13,11 +13,11 @@
             "type": "number"
           },
           "test": {
-            "$ref": "#/TestService/definitions/custom"
+            "$ref": "TestService.json#/definitions/custom"
 
           },
           "b": {
-            "$ref": "#/TestService/definitions/numerable"
+            "$ref": "TestService.json#/definitions/numerable"
           }
         },
         "required": [
@@ -85,7 +85,7 @@
     }
   },
   "Ref": {
-    "$id": "TestService",
+    "$id": "TestService.json",
     "type": "object",
     "additionalProperties": false,
     "definitions": {
