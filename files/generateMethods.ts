@@ -1,6 +1,6 @@
 import fs from 'fs';
 import * as path from 'path';
-import { StructureKind } from 'ts-morph';
+import { StructureKind, VariableDeclarationKind } from 'ts-morph';
 import { FILE_EXTENTION, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 
@@ -21,6 +21,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
       fs.mkdirSync(methodsDirectoryFolderPath);
     }
     const filePath = path.join(methodsDirectoryFolderPath, `index${FILE_EXTENTION}`);
+    const testFilePath = path.join(methodsDirectoryFolderPath, `index.test${FILE_EXTENTION}`);
 
     if (fs.existsSync(filePath)) {
       continue;
@@ -89,5 +90,62 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
         overwrite: true,
       },
     );
+
+    const test = project.createSourceFile(
+      testFilePath,
+      {
+        statements: [
+          {
+            kind: StructureKind.ImportDeclaration,
+            isTypeOnly: true,
+            namedImports: [methodName],
+            moduleSpecifier: `.`,
+          },
+        ],
+      },
+      { overwrite: true },
+    );
+    test.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const, // defaults to "let"
+      declarations: [
+        {
+          name: 'context',
+          initializer: '{}',
+        },
+      ],
+    });
+    test.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const, // defaults to "let"
+      declarations: [
+        {
+          name: 'testData',
+          type: 'any',
+          initializer: `{
+            repository: {},
+            errors: {
+            },
+            logger: console,
+          
+          }`,
+        },
+      ],
+    });
+    test.applyTextChanges([
+      {
+        newText:
+          `describe('Проверка ${methodName}', () => {\n` +
+          '    beforeEach(jest.clearAllMocks);\n' +
+          `    test.skip('Успех', async () => {\n` +
+          ' // TODO  Написать тест \n' +
+          '      })\n' +
+          '})\n',
+        span: {
+          start: 350,
+          length: 100,
+        },
+      },
+    ]);
+
+    await test.save();
   }
 };
