@@ -97,7 +97,6 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
         statements: [
           {
             kind: StructureKind.ImportDeclaration,
-            isTypeOnly: true,
             namedImports: [methodName],
             moduleSpecifier: `.`,
           },
