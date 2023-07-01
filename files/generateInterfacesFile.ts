@@ -52,6 +52,8 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     const eventInterface = await compile(event.event, eventInterfaceName, {
       bannerComment: '',
       additionalProperties: false,
+      cwd: refPath,
+      $refOptions: {},
     });
 
     interfaces += eventInterface + '\n';
