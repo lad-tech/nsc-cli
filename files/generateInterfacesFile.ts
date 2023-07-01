@@ -42,10 +42,6 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
     interfaces += requestInterface + '\n';
     interfaces += responseInterface + '\n';
   }
-  if (schema.Ref?.['$id']) {
-    const RefSchemaName = Path.resolve(refPath, schema.Ref['$id']);
-    await fs.rm(RefSchemaName);
-  }
 
   const events = schema.events?.list || {};
   const generalEventsData: Array<{ name: string; interfaceName: string; isStream: boolean }> = [];
@@ -97,6 +93,11 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
       ' */',
     interfaces,
   ]);
+  if (schema.Ref?.['$id']) {
+    const RefSchemaName = Path.resolve(refPath, schema.Ref['$id']);
+    await fs.rm(RefSchemaName);
+  }
+
   file.fixUnusedIdentifiers();
   const interfaceDeclarationSet = new Set<string>();
   file.getInterfaces().forEach(i => {
