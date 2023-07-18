@@ -29,7 +29,7 @@
     "@semantic-release/npm": "^9.0.1",
     "@types/gitignore-parser": "^0.0.0",
     "@types/node": "^18.11.13",
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^15.0.0",
