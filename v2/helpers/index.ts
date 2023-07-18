@@ -48,6 +48,7 @@ export async function setStyleInProject(project: Project, prettierConfigPath?: s
     bracketSpacing: true,
     useTabs: false,
     printWidth: 120,
+    parser: 'babel-ts',
   };
   try {
     const prettierConfigFilePath = prettierConfigPath || '.prettierrc.json';
@@ -60,7 +61,7 @@ export async function setStyleInProject(project: Project, prettierConfigPath?: s
 
   for (const file of project.getSourceFiles()) {
     if (file.getFilePath().endsWith('.ts')) {
-      await fs.writeFile(file.getFilePath(), format(file.getFullText(), prettierConf));
+      await fs.writeFile(file.getFilePath(), await format(file.getFullText(), prettierConf));
     }
   }
 }

@@ -13,6 +13,10 @@
   "bin": {
     "nsc-cli": "/dist/v2/cli/service-cli.js"
   },
+  "peerDependencies": {
+    "prettier": "^3.0.0",
+    "@lad-tech/nsc-toolkit": "^1.7.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
@@ -21,6 +25,7 @@
     "@types/gitignore-parser": "^0.0.0",
     "@types/node": "^18.11.13",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^6.1.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -29,8 +34,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "lefthook": "^1.2.0",
-    "prettier": "^2.6.1",
-    "prettier-eslint": "^13.0.0",
+    "prettier": "^3.0.0",
+    "prettier-eslint": "^15.0.1",
     "semantic-release": "^19.0.5",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.9.1",
