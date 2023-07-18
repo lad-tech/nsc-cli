@@ -48,7 +48,6 @@ export async function setStyleInProject(project: Project, prettierConfigPath?: s
     bracketSpacing: true,
     useTabs: false,
     printWidth: 120,
-    parser: 'typescript',
   };
   try {
     const prettierConfigFilePath = prettierConfigPath || '.prettierrc.json';
