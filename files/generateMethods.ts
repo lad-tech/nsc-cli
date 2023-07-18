@@ -108,8 +108,15 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
       declarationKind: VariableDeclarationKind.Const, // defaults to "let"
       declarations: [
         {
-          name: 'context',
-          initializer: '{}',
+          name: 'ctx',
+          initializer: `{
+            repository: {},
+            errors: {
+            },
+            emitter: {},
+            logger: console,
+          
+          }`,
         },
       ],
     });
@@ -119,13 +126,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
         {
           name: 'testData',
           type: 'any',
-          initializer: `{
-            repository: {},
-            errors: {
-            },
-            logger: console,
-          
-          }`,
+          initializer: '{}',
         },
       ],
     });
@@ -135,8 +136,13 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
           `describe('Проверка ${methodName}', () => {\n` +
           '    beforeEach(jest.clearAllMocks);\n' +
           `    test.skip('Успех', async () => {\n` +
-          ' // TODO  Написать тест \n' +
-          '      })\n' +
+          '     // TODO  Написать тест \n' +
+          `          await new ${methodName}().handler.call(ctx, testData);` +
+          '      });\n' +
+          "  test.skip('Ошибка синхронизации', async () => {\n" +
+          "    // ctx.repository[].mockRejectedValue(new Error('runtime'));\n" +
+          `    await expect(new ${methodName}().handler.call(ctx, testData)).rejects.toThrow();\n` +
+          '  });' +
           '})\n',
         span: {
           start: 350,

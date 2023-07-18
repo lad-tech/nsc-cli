@@ -60,7 +60,7 @@ export async function setStyleInProject(project: Project, prettierConfigPath?: s
   }
 
   for (const file of project.getSourceFiles()) {
-    if (file.getFilePath().endsWith('*.ts')) {
+    if (file.getFilePath().endsWith('.ts')) {
       await fs.writeFile(file.getFilePath(), format(file.getFullText(), prettierConf));
     }
   }
