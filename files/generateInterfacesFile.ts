@@ -101,12 +101,20 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
   }
 
   file.fixUnusedIdentifiers();
-  const interfaceDeclarationSet = new Set<string>();
+  const declarations = new Set<string>();
   file.getInterfaces().forEach(i => {
     const name = i.getName();
-    if (interfaceDeclarationSet.has(name)) {
+    if (declarations.has(name)) {
       i.remove();
     }
-    interfaceDeclarationSet.add(name);
+    declarations.add(name);
+  });
+
+  file.getTypeAliases().forEach(i => {
+    const name = i.getName();
+    if (declarations.has(name)) {
+      i.remove();
+    }
+    declarations.add(name);
   });
 };
