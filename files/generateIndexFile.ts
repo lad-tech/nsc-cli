@@ -78,7 +78,6 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           namedImports: importFields,
           moduleSpecifier: `./${schemaFileName}`,
         },
-        // import { Logs } from '@lad-tech/toolbelt';
         {
           kind: StructureKind.ImportDeclaration,
           namedImports: ['Client', 'Baggage', 'CacheSettings'],
