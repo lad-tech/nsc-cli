@@ -5,6 +5,8 @@
     "strictNullChecks": true,
     "module": "commonjs",
     "target": "es2019",
+
+
     "allowJs": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,

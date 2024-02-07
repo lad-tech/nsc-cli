@@ -97,11 +97,12 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
           {
             kind: StructureKind.Function,
             name: 'main',
+            isExported: true,
             isAsync: true,
             parameters: [
               {
                 kind: StructureKind.Parameter,
-                name: 'broker',
+                name: 'broker?',
                 type: 'NatsConnection',
               },
             ],

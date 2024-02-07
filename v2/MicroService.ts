@@ -6,6 +6,7 @@ import { generateInterfacesFile } from '../files/generateInterfacesFile';
 import { generateMethods } from '../files/generateMethods';
 import { generatePackageJson } from '../files/generatePackageJson';
 import { generateServerFile } from '../files/generateServerFile';
+import { generateStartFile } from '../files/generateStartFile';
 import { MiddlewareFn } from '../interfaces';
 import { GeneratorAbstract, GeneratorSettings } from './GeneratorAbstract';
 import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from './helpers';
@@ -17,6 +18,7 @@ export class MicroService extends GeneratorAbstract {
     generateIndexFile,
     generateServerFile,
     generatePackageJson,
+    generateStartFile,
   ];
 
   public async generate(settings: GeneratorSettings) {

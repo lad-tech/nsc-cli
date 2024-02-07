@@ -1,6 +1,12 @@
 import * as path from 'path';
 import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, StructureKind } from 'ts-morph';
-import { FILE_EXTENTION, INDEX_FILE_NAME, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
+import {
+  FILE_EXTENTION,
+  INDEX_FILE_NAME,
+  INTERFACES_FILE_NAME,
+  TOOLBELT_MODULE_NAME,
+  TOOLKIT_MODULE_NAME,
+} from '../constants';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 import { isIgnore } from '../utils';
 
@@ -79,6 +85,11 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         },
         {
           kind: StructureKind.ImportDeclaration,
+          namedImports: ['Logs'],
+          moduleSpecifier: TOOLBELT_MODULE_NAME,
+        },
+        {
+          kind: StructureKind.ImportDeclaration,
           isTypeOnly: true,
           namedImports: ['NatsConnection'],
           moduleSpecifier: 'nats',
@@ -91,12 +102,13 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         {
           kind: StructureKind.Class,
           name: schema.name,
+
           ctors: [
             {
               kind: StructureKind.Constructor,
-              statements: `super({ broker, serviceName: name, baggage, cache ${hasEvents ? ',events' : ''} ${
-                schema.Ref?.$id ? ',Ref' : ''
-              } }); `,
+              statements: `super({ broker, serviceName: name, baggage, cache,loggerOutputFormatter ${
+                hasEvents ? ',events' : ''
+              } ${schema.Ref?.$id ? ',Ref' : ''} }); `,
               parameters: [
                 {
                   kind: StructureKind.Parameter,
@@ -113,6 +125,11 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
                   kind: StructureKind.Parameter,
                   name: 'cache?',
                   type: 'CacheSettings',
+                },
+                {
+                  kind: StructureKind.Parameter,
+                  name: 'loggerOutputFormatter?',
+                  type: 'Logs.OutputFormatter',
                 },
               ],
             },
