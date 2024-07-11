@@ -18,6 +18,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
   if (await isIgnore(directoryPath, filePath)) {
     return;
   }
+  let useStream: boolean = false;
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
@@ -32,6 +33,8 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         },
       ],
     );
+    useStream =
+      useStream || Boolean(method?.options?.useStream?.request) || Boolean(method?.options?.useStream?.response);
     const requestT = method?.options?.useStream?.request ? 'Readable' : requestType;
     const returnT = method?.options?.useStream?.response ? 'Readable' : returnType;
     methods.push({
@@ -94,11 +97,13 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           namedImports: ['NatsConnection'],
           moduleSpecifier: 'nats',
         },
-        {
-          kind: StructureKind.ImportDeclaration,
-          namedImports: ['Readable'],
-          moduleSpecifier: 'stream',
-        },
+        useStream
+          ? {
+              kind: StructureKind.ImportDeclaration,
+              namedImports: ['Readable'],
+              moduleSpecifier: 'stream',
+            }
+          : '',
         {
           kind: StructureKind.Class,
           name: schema.name,
