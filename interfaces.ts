@@ -2,6 +2,8 @@ import { Project } from 'ts-morph';
 
 type JsonSchemaLike = {
   $id: string;
+  type: string;
+  properties: Record<string, any>;
   [key: string]: unknown;
 };
 export interface ServiceSchema {
@@ -13,8 +15,8 @@ export interface ServiceSchema {
     {
       action: string;
       description: string;
-      request: object;
-      response: object;
+      request: any;
+      response: any;
       options: Partial<{
         cache: number;
         runTimeValidation?: {

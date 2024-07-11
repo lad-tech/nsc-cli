@@ -1,0 +1,47 @@
+{
+  "entityName": "Notification",
+  "entityData": {
+    "type": "object",
+    "properties": {
+
+      "title": {
+        "type": "string",
+        "description": "Заголовок уведомления"
+      },
+      "description": {
+        "type": "string",
+        "description": "Описание уведомления"
+      },
+      "deeplink": {
+        "type": "string",
+        "description": "URL для диплинков"
+      },
+      "topic": {
+        "type": "string",
+        "enum": ["general", "direct"],
+        "description": "Тип уведомления general - всем, direct конкретным пользователям, нужно передать id пользователей"
+      },
+      "fcm": {
+        "type": "array",
+        "description": "Fcm пользователей, для которых это уведомление. Если пустой, то для всех",
+        "items": {
+          "type": "string"
+        }
+      },
+      "userIds": {
+        "type": "array",
+        "description": "ID пользователей, для которых это уведомление. Если пустой, то для всех",
+        "items": {
+          "type": "string"
+        }
+      }
+
+    },
+    "required": [ "title", "description", "topic"]
+  },
+  "filterColumns": ["title", "description","topic"]
+}
+
+
+
+

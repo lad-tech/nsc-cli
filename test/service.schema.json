@@ -2,109 +2,209 @@
   "name": "Math",
   "description": "Mathematics service",
   "methods": {
-    "Sum": {
-      "action": "sum",
-      "description": "Addition of two numbers",
+    "NotificationCreate": {
       "options": {},
+      "action": "NotificationCreate",
+      "description": "Создание Notification",
       "request": {
-        "type": "object",
-        "properties": {
-          "a": {
-            "type": "number"
-          },
-          "test": {
-            "$ref": "TestService.json#/definitions/custom"
-
-          },
-          "b": {
-            "$ref": "TestService.json#/definitions/numerable"
-          }
-        },
-        "required": [
-          "a",
-          "b"
-        ]
+        "$ref": "MathAdditional.json#/properties/Notification"
       },
       "response": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "number"
+        "allOf": [
+          {
+            "$ref": "MathAdditional.json#/properties/Notification"
+          },
+          {
+            "$ref": "MathAdditional.json#/properties/BaseEntityFields"
           }
-        },
-        "required": [
-          "result"
         ]
       }
     },
-    "Fibonacci": {
-      "action": "fibonacci",
-      "description": "Return Fibonacci sequence given length",
-      "options": {
-        "useStream": {
-          "response": true
-        }
-      },
+    "GetNotificationById": {
+      "options": {},
+      "action": "GetNotificationById",
+      "description": "Получение Notification",
       "request": {
         "type": "object",
         "properties": {
-          "length": {
-            "$ref": "TestService.json#/definitions/numerable"
+          "id": {
+            "type": "string",
+            "description": "Идентификатор",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "MathAdditional.json#/properties/Notification"
+              },
+              {
+                "$ref": "MathAdditional.json#/properties/BaseEntityFields"
+              }
+            ]
           },
-          "fakeProp": {
-            "$ref": "TestService.json#/definitions/custom"
+          "errors": {
+            "$ref": "MathAdditional.json#/properties/ErrorResponse"
           }
-        },
-        "required": [
-          "length"
-        ]
-      },
-      "response": {
-        "type": "number"
-      }
-    },
-    "SumStream": {
-      "action": "sumstream",
-      "description": "Adding all the numbers of the stream",
-      "options": {
-        "useStream": {
-          "request": true
         }
-      },
-      "request": {
-        "type": "number"
-      },
-      "response": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "result"
-        ]
       }
     }
   },
   "Ref": {
-    "$id": "TestService.json",
+    "$id": "MathAdditional.json",
     "type": "object",
-    "additionalProperties": false,
-    "definitions": {
-      "numerable": {
-        "type": "number"
-      },
-      "custom": {
+    "properties": {
+      "Notification": {
         "type": "object",
-        "additionalProperties": {
-          "type": "string"
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Заголовок уведомления"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание уведомления"
+          },
+          "deeplink": {
+            "type": "string",
+            "description": "URL для диплинков"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "general",
+              "direct"
+            ],
+            "description": "Тип уведомления general - всем, direct конкретным пользователям, нужно передать id пользователей"
+          },
+          "fcm": {
+            "type": "array",
+            "description": "Fcm пользователей, для которых это уведомление. Если пустой, то для всех",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userIds": {
+            "type": "array",
+            "description": "ID пользователей, для которых это уведомление. Если пустой, то для всех",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "topic"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 255
+            },
+            "message": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 255
+            },
+            "statusCode": {
+              "type": "number",
+              "description": "HTTP код ошибки",
+              "minimum": 100,
+              "maximum": 511
+            }
+          },
+          "required": [
+            "message"
+          ]
         }
+      },
+      "pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Номер страницы"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Размер страницы"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Количество сущностей"
+          }
+        },
+        "required": [
+          "page",
+          "size",
+          "total"
+        ]
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Номер страницы"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Размер страницы"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Количество сущностей"
+          }
+        },
+        "required": [
+          "page",
+          "size",
+          "total"
+        ]
+      },
+      "BaseEntityFields": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата создания"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата обновления"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "updated",
+          "created",
+          "id"
+        ]
       }
     }
   }
 }
-
-
-
-
