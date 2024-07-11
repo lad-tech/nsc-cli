@@ -18,25 +18,31 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
   if (await isIgnore(directoryPath, filePath)) {
     return;
   }
-  let useStream: boolean = false;
+  let isUseStream: boolean = false;
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
-    const returnType = `${methodName}Response`;
+    const {
+      options: { useStream },
+    } = method;
+    const isRequestStream = Boolean(useStream?.request);
+    const isResponseStream = Boolean(useStream?.response);
+    isUseStream = isUseStream || isResponseStream || isRequestStream;
+    const responseType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
-    imports.push(
-      ...[
-        {
-          name: requestType,
-        },
-        {
-          name: returnType,
-        },
-      ],
-    );
-    useStream =
-      useStream || Boolean(method?.options?.useStream?.request) || Boolean(method?.options?.useStream?.response);
+    if (!isRequestStream) {
+      imports.push({
+        name: requestType,
+      });
+    }
+    if (!isResponseStream) {
+      imports.push({
+        name: responseType,
+      });
+    }
+
     const requestT = method?.options?.useStream?.request ? 'Readable' : requestType;
-    const returnT = method?.options?.useStream?.response ? 'Readable' : returnType;
+    const returnT = method?.options?.useStream?.response ? 'Readable' : responseType;
+
     methods.push({
       kind: StructureKind.Method,
       name: method.action,
@@ -97,7 +103,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           namedImports: ['NatsConnection'],
           moduleSpecifier: 'nats',
         },
-        useStream
+        isUseStream
           ? {
               kind: StructureKind.ImportDeclaration,
               namedImports: ['Readable'],

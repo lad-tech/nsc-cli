@@ -41,9 +41,8 @@
       "action": "fibonacci",
       "description": "Return Fibonacci sequence given length",
       "options": {
-        "useStream": {
-          "response": true
-        }
+
+
       },
       "request": {
         "type": "object",
