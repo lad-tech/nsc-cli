@@ -21,11 +21,9 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
   let isUseStream: boolean = false;
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
-    const {
-      options: { useStream },
-    } = method;
-    const isRequestStream = Boolean(useStream?.request);
-    const isResponseStream = Boolean(useStream?.response);
+
+    const isRequestStream = Boolean(method.options?.useStream?.request);
+    const isResponseStream = Boolean(method.options?.useStream?.response);
     isUseStream = isUseStream || isResponseStream || isRequestStream;
     const responseType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
