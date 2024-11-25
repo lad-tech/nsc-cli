@@ -51,9 +51,9 @@
     "@lad-tech/toolbelt": "^1.1.2",
 
     "ajv": "^8.11.2",
-    "commander": "^9.4.1",
+    "commander": "^12.1.0",
     "gitignore-parser": "^0.0.2",
-    "json-schema-to-typescript": "^11.0.2",
+    "json-schema-to-typescript": "^15.0.3",
     "reflect-metadata": "^0.1.13",
     "ts-morph": "^17.0.1"
   },
