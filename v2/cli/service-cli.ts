@@ -5,7 +5,7 @@ import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ServiceSchema } from '../../interfaces';
-import * as ValidateSchema from '../../schemaValidator.json';
+import * as ValidateSchema from '../../serviceSchemaValidator.json';
 import { MicroService } from '../MicroService';
 
 async function main() {

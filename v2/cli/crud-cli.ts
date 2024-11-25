@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
+import Ajv from 'ajv';
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Project } from 'ts-morph';
+import * as ValidateSchema from '../../crudSchemaValidator.json';
 import { generateAggregateFile } from '../../files/crud/generateAggregateFile';
 import { generateCrudMethods } from '../../files/crud/generateCrudMethods';
 import { generateDiFiles } from '../../files/crud/generateDiFile';
@@ -34,13 +36,17 @@ async function main() {
     const directoryPath = path.dirname(pathToSchema);
     const schemaFileName = `${path.basename(pathToSchema)}`;
     const pathToServiceSchema = path.resolve(directoryPath, 'service.schema.json');
-    if (!fs.existsSync(pathToServiceSchema)) {
-      throw new Error(`${pathToServiceSchema} not found`);
-    }
 
     console.log('Start generation in ', directoryPath);
     const crudSchema: CrudSchema = (await import(pathToSchema)).default;
     const serviceSchema: ServiceSchema = (await import(pathToServiceSchema)).default;
+
+    const validate = new Ajv().compile(ValidateSchema);
+    const valid = validate(crudSchema);
+    if (!valid) {
+      console.log(validate.errors);
+      throw new Error('validate error');
+    }
     const project = new Project(DefaultProjectSettings);
     const [firstSymbol, ...otherSymbols] = crudSchema.entityName;
     crudSchema.entityName = `${firstSymbol.toUpperCase()}${otherSymbols.join('').toLowerCase()}`;
