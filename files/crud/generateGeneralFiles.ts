@@ -3,7 +3,7 @@ import path from 'path';
 import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
 
 export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
-  const { rootPath } = opts;
+  const { rootPath, project } = opts;
 
   // Определяем путь к директории general и необходимым файлам
   const generalDirectoryPath = path.resolve(rootPath, '..', 'general');
@@ -20,7 +20,7 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
 
   // Проверяем наличие файла pagination.ts
   if (!fs.existsSync(paginationFilePath)) {
-    fs.writeFileSync(
+    project.createSourceFile(
       paginationFilePath,
       `export function preparePagination(params: { page?: number; size?: number; total: number }) {
   const { page = 1, size = 12, total } = params;
@@ -44,13 +44,14 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
   };
 }
 `,
+      { overwrite: true },
     );
     console.log(`Файл pagination.ts создан по пути ${paginationFilePath}`);
   }
 
   // Проверяем наличие файла Logger.ts
   if (!fs.existsSync(loggerFilePath)) {
-    fs.writeFileSync(
+    project.createSourceFile(
       loggerFilePath,
       `import { Logs } from '@lad-tech/toolbelt';
 
@@ -74,13 +75,14 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
           });
 
 `,
+      { overwrite: true },
     );
     console.log(`Файл Logger.ts создан по пути ${loggerFilePath}`);
   }
 
   // Проверяем наличие файла Configurator.ts
   if (!fs.existsSync(configuratorFilePath)) {
-    fs.writeFileSync(
+    project.createSourceFile(
       configuratorFilePath,
       `export class Configurator {
   public castToNumber(value: string) {
@@ -108,6 +110,7 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
 }
 
 `,
+      { overwrite: true },
     );
     console.log(`Файл Configurator.ts создан по пути ${configuratorFilePath}`);
   }
@@ -129,6 +132,7 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
     }
   });
 
-  fs.writeFileSync(indexFilePath, indexFileContent);
+  project.createSourceFile(indexFilePath, indexFileContent.toString(), { overwrite: true });
+  await project.save();
   console.log(`Файл index.ts обновлен по пути ${indexFilePath}`);
 };

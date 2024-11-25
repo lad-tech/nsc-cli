@@ -123,6 +123,18 @@ export const generateSchemaFile: CrudMiddlewareFn = async opts => {
     request: {
       type: 'object',
       properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Номер страницы',
+          default: 1,
+        },
+        size: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Количество сущностей',
+          default: 12,
+        },
         filter: {
           type: 'object',
           properties: {

@@ -216,7 +216,7 @@ export const generateRepositoryFile: CrudMiddlewareFn = async opts => {
       parameters: [{ name: 'id', type: 'string' }],
       statements: `
     const result = await this.collection.findOne({ id });
-    return result ? ${className}.fromDB(result) : null;
+    return result ? new ${className}(result): null;
   `,
     });
     // Метод getList
@@ -249,7 +249,7 @@ export const generateRepositoryFile: CrudMiddlewareFn = async opts => {
 
         return {
           meta,
-          data: results.map(${className}.fromDB)
+          data: results.map( i=> new ${className}(i))
         };
       `,
     });

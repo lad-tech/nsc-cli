@@ -7,8 +7,8 @@
     "copyData": "cp schemaValidator.json dist/schemaValidator.json && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl && cp config.json dist/config.json",
     "build": "rm -rf dist/ && tsc &&  chmod +x dist/v2/cli/service-cli.js && npm run copyData ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema test/service.schema.json",
-    "create-crud": "npx ts-node v2/cli/createCrud.ts --schema test/Notification.schema.json",
+    "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema testSrc/testService/service.schema.json",
+    "create-crud": "npx ts-node v2/cli/createCrud.ts --schema testSrc/testService//Notification.schema.json",
     "semantic-release": "semantic-release"
   },
   "bin": {
@@ -43,21 +43,19 @@
     "eslint-plugin-prettier": "^5.0.0",
     "lefthook": "^1.2.0",
     "prettier-eslint": "^15.0.1",
-
     "ts-jest": "^29.2.4",
     "ts-node": "^10.9.2",
     "prettier": "^3.0.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "@lad-tech/toolbelt": "^1.1.2",
-
     "ajv": "^8.11.2",
-    "commander": "^9.4.1",
+    "commander": "^12.1.0",
     "gitignore-parser": "^0.0.2",
-    "json-schema-to-typescript": "^11.0.2",
+    "json-schema-to-typescript": "^15.0.3",
     "reflect-metadata": "^0.1.13",
-    "ts-morph": "^17.0.1"
+    "ts-morph": "^24.0.0"
   },
   "repository": {
     "type": "git",

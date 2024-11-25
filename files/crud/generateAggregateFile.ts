@@ -4,7 +4,7 @@ import { Scope } from 'ts-morph';
 import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
 
 export const generateAggregateFile: CrudMiddlewareFn = async opts => {
-  const { serviceSchema, crudSchema, pathToServiceSchema, project, rootPath } = opts;
+  const { crudSchema, project, rootPath } = opts;
   const schema = crudSchema.entityData;
   const className = crudSchema.entityName;
 
@@ -17,7 +17,7 @@ export const generateAggregateFile: CrudMiddlewareFn = async opts => {
   if (schema.properties) {
     const classFile = project.createSourceFile(
       path.resolve(aggregateDirectoryPath, `${className}.ts`),
-      '' + "import { randomUUID } from 'node:crypto';" + `\n import { ${className}Params } from './interfaces';`,
+      "import { randomUUID } from 'node:crypto';" + `\n import { ${className}Params } from './interfaces';`,
       {
         overwrite: true,
       },

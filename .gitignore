@@ -116,3 +116,7 @@ dist
 /test/methods/Sum/index.ts
 /test/methods/SumStream/index.ts
 /test/*
+/general/Configurator.ts
+/general/index.ts
+/general/Logger.ts
+/general/pagination.ts

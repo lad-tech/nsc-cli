@@ -5,12 +5,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Project } from 'ts-morph';
 import { generateAggregateFile } from '../../files/crud/generateAggregateFile';
+import { generateCrudMethods } from '../../files/crud/generateCrudMethods';
+import { generateDiFiles } from '../../files/crud/generateDiFile';
 import { generateGeneralFiles } from '../../files/crud/generateGeneralFiles';
 import { generateRepositoryFile } from '../../files/crud/generateRepositoryFile';
 import { generateSchemaFile } from '../../files/crud/generateSchemaFile';
-import { ServiceSchema } from '../../interfaces';
+import { generateIndexFile } from '../../files/generateIndexFile';
+import { generateInterfacesFile } from '../../files/generateInterfacesFile';
+import { generateServerFile } from '../../files/generateServerFile';
+import { generateStartFile } from '../../files/generateStartFile';
+import { MiddlewareOptions, ServiceSchema } from '../../interfaces';
 import { CrudMiddlewareFnOpts, CrudSchema } from '../crud/interfaces';
-import { DefaultProjectSettings, setStyleInProject } from '../helpers';
+import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from '../helpers';
 
 async function main() {
   try {
@@ -38,6 +44,13 @@ async function main() {
     const project = new Project(DefaultProjectSettings);
     const [firstSymbol, ...otherSymbols] = crudSchema.entityName;
     crudSchema.entityName = `${firstSymbol.toUpperCase()}${otherSymbols.join('').toLowerCase()}`;
+    const tsconfigPath = path.join(directoryPath, 'tsconfig.json');
+    //  ts-config
+    if (!fs.existsSync(tsconfigPath)) {
+      project.createSourceFile(tsconfigPath, JSON.stringify(BaseTsConfig, null, 2), {
+        overwrite: false,
+      });
+    }
     const opts: CrudMiddlewareFnOpts = {
       project,
       crudSchema,
@@ -45,12 +58,25 @@ async function main() {
       pathToServiceSchema,
       rootPath: directoryPath,
     };
+    const baseOpts: MiddlewareOptions = {
+      project,
+      schema: serviceSchema,
+      directoryPath,
+      schemaFileName: `${path.basename(pathToServiceSchema)}`,
+    };
     //  Модифицируем схему сервиса
     await generateSchemaFile(opts);
     //  Тут проверка наличия наших стандартных штук
     await generateGeneralFiles(opts);
     await generateAggregateFile(opts);
     await generateRepositoryFile(opts);
+    await generateInterfacesFile(baseOpts);
+    await generateDiFiles(opts);
+    await generateCrudMethods(opts);
+    await generateCrudMethods(opts);
+    await generateIndexFile(baseOpts);
+    await generateServerFile(baseOpts);
+    await generateStartFile(baseOpts);
     await setStyleInProject(project);
   } catch (err) {
     console.error(err);
