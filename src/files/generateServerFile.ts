@@ -40,7 +40,7 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     const service = existsFile
       .getFunctionOrThrow('main')
       .getDescendantsOfKind(SyntaxKind.NewExpression)
-      .find(ex => ex.getText().includes('Service'));
+      .find((ex: { getText: () => string | string[] }) => ex.getText().includes('Service'));
 
     const ServiceArguments = service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getProperties();
     const methodsArray = ServiceArguments?.find(

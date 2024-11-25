@@ -1,15 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 import { Project } from 'ts-morph';
-import { generateIndexFile } from '../files/generateIndexFile';
-import { generateInterfacesFile } from '../files/generateInterfacesFile';
-import { generateMethods } from '../files/generateMethods';
-import { generatePackageJson } from '../files/generatePackageJson';
-import { generateServerFile } from '../files/generateServerFile';
-import { generateStartFile } from '../files/generateStartFile';
-import { MiddlewareFn } from '../interfaces';
+import {
+  generateIndexFile,
+  generateInterfacesFile,
+  generateMethods,
+  generatePackageJson,
+  generateServerFile,
+  generateStartFile,
+} from './files';
 import { GeneratorAbstract, GeneratorSettings } from './GeneratorAbstract';
 import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from './helpers';
+
+import { MiddlewareFn } from './interfaces';
 
 export class MicroService extends GeneratorAbstract {
   private middlewares: MiddlewareFn[] = [
