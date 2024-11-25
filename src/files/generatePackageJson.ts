@@ -5,7 +5,7 @@ import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
 import { isIgnore } from '../utils';
 
 export const generatePackageJson: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
-  const { project, schema, directoryPath } = opts;
+  const { schema, directoryPath } = opts;
   const packageJsonPath = path.join(directoryPath, 'package.json');
 
   if (await isIgnore(directoryPath, packageJsonPath)) {

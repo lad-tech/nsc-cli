@@ -4,11 +4,10 @@
   "description": "",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "copyData": "cp serviceSchemaValidator.json dist/schemaValidator.json && cp handleErrors.ts.tpl dist/handleErrors.ts.tpl && cp config.json dist/config.json",
-    "build": "rm -rf dist/ && tsc &&  chmod +x dist/v2/cli/service-cli.js && npm run copyData ",
+    "build": "rm -rf dist/ && tsc &&  chmod +x dist/cli/service-cli.js && chmod +x dist/cli/crud-cli.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-servicev2": "npx ts-node v2/cli/service-cli.ts --schema testSrc/testService/service.schema.json",
-    "create-crud": "npx ts-node v2/cli/crud-cli.ts --schema testSrc/testService//Notification.schema.json",
+    "create-servicev": "npx ts-node v2/cli/service-cli.ts --schema fakeServicesDirectory/testService/service.schema.json",
+    "create-crud": "npx ts-node v2/cli/crud-cli.ts --schema fakeServicesDirectory/testService//Notification.schema.json",
     "semantic-release": "semantic-release"
   },
   "bin": {

@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import { Scope } from 'ts-morph';
-import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
+import { CrudMiddlewareFn } from '../../crud/interfaces';
 
 export const generateRepositoryFile: CrudMiddlewareFn = async opts => {
-  const { serviceSchema, crudSchema, pathToServiceSchema, project, rootPath } = opts;
+  const { crudSchema, project, rootPath } = opts;
   const schema = crudSchema.entityData;
   const className = crudSchema.entityName;
   const filterColumns = crudSchema.filterColumns;

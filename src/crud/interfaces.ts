@@ -1,6 +1,6 @@
 import { JSONSchema7 } from 'json-schema';
 import { Project } from 'ts-morph';
-import { ServiceSchema } from '../../interfaces';
+import { ServiceSchema } from '../interfaces';
 
 export interface CrudSchema {
   entityName: string;

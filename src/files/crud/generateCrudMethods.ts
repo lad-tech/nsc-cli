@@ -1,42 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { Scope } from 'ts-morph';
-import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
-
-/**
- * Вспомогательная функция для преобразования JSON Schema типов в TypeScript типы
- */
-function getType(propertySchema: any): string {
-  switch (propertySchema?.type) {
-    case 'string':
-      if (propertySchema.enum) {
-        return propertySchema.enum.map((val: string) => `'${val}'`).join(' | ');
-      }
-      return 'string';
-    case 'number':
-      return 'number';
-    case 'boolean':
-      return 'boolean';
-    case 'array':
-      return `${getType(propertySchema.items)}[]`;
-    case 'object':
-      if (propertySchema.properties) {
-        return `{ ${Object.keys(propertySchema.properties)
-          .map(key => `${key}: ${getType(propertySchema.properties[key])}`)
-          .join('; ')} }`;
-      }
-      return 'Record<string, any>';
-    default:
-      return 'any';
-  }
-}
+import { CrudMiddlewareFn } from '../../crud/interfaces';
 
 /**
  * Функция для генерации CRUD-методов в папку methods, каждый метод в отдельной папке
  */
 export const generateCrudMethods: CrudMiddlewareFn = async opts => {
-  const { crudSchema, project, rootPath, serviceSchema } = opts;
-  const schema = crudSchema.entityData;
+  const { crudSchema, project, rootPath } = opts;
   const entityName = crudSchema.entityName;
 
   const methodsDirectoryPath = path.resolve(rootPath, 'methods');
@@ -66,10 +37,6 @@ export const generateCrudMethods: CrudMiddlewareFn = async opts => {
     if (!fs.existsSync(methodFolderPath)) {
       fs.mkdirSync(methodFolderPath, { recursive: true });
     }
-
-    // Определение настроек метода из service.schema.json, если они есть
-    const methodSettings =
-      serviceSchema.methods && serviceSchema.methods[methodName] ? serviceSchema.methods[methodName] : {};
 
     // Определение интерфейсов для запросов и ответов
     const requestInterface = `${methodName}Request`;

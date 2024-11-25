@@ -103,20 +103,3 @@ dist
 # TernJS port file
 .tern-port
 /.idea/
-/test/index.ts
-/test/interfaces.ts
-/test/package.json
-/test/service.ts
-/test/tsconfig.json
-/test/methods/weirdsum.ts
-/test/methods/Fibonacci/index.test.ts
-/test/methods/Sum/index.test.ts
-/test/methods/SumStream/index.test.ts
-/test/methods/Fibonacci/index.ts
-/test/methods/Sum/index.ts
-/test/methods/SumStream/index.ts
-/test/*
-/general/Configurator.ts
-/general/index.ts
-/general/Logger.ts
-/general/pagination.ts

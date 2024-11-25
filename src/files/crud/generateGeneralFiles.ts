@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
+import { CrudMiddlewareFn } from '../../crud/interfaces';
 
 export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
   const { rootPath, project } = opts;

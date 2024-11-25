@@ -1,7 +1,7 @@
 import fs from 'fs';
+import { baseSchemas } from '../../crud/baseSchemas';
+import { CrudMiddlewareFn } from '../../crud/interfaces';
 import { ServiceSchema } from '../../interfaces';
-import { baseSchemas } from '../../v2/crud/baseSchemas';
-import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
 
 const createFilterObject = (fields: string[], refBasePath: string) =>
   fields.reduce(

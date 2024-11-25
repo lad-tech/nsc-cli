@@ -1,14 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { StructureKind } from 'ts-morph';
-import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
+import { CrudMiddlewareFn } from '../../crud/interfaces';
 
 /**
  * Функция для генерации файлов di.types.ts и di.config.ts
  */
 export const generateDiFiles: CrudMiddlewareFn = async opts => {
   const { crudSchema, project, rootPath } = opts;
-  const schema = crudSchema.entityData;
   const className = crudSchema.entityName;
 
   // Определение имен классов репозитория и сервиса

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Scope } from 'ts-morph';
-import { CrudMiddlewareFn } from '../../v2/crud/interfaces';
+import { CrudMiddlewareFn } from '../../crud/interfaces';
 
 export const generateAggregateFile: CrudMiddlewareFn = async opts => {
   const { crudSchema, project, rootPath } = opts;

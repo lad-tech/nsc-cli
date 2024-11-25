@@ -5,20 +5,22 @@ import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Project } from 'ts-morph';
-import * as ValidateSchema from '../../crudSchemaValidator.json';
-import { generateAggregateFile } from '../../files/crud/generateAggregateFile';
-import { generateCrudMethods } from '../../files/crud/generateCrudMethods';
-import { generateDiFiles } from '../../files/crud/generateDiFile';
-import { generateGeneralFiles } from '../../files/crud/generateGeneralFiles';
-import { generateRepositoryFile } from '../../files/crud/generateRepositoryFile';
-import { generateSchemaFile } from '../../files/crud/generateSchemaFile';
-import { generateIndexFile } from '../../files/generateIndexFile';
-import { generateInterfacesFile } from '../../files/generateInterfacesFile';
-import { generateServerFile } from '../../files/generateServerFile';
-import { generateStartFile } from '../../files/generateStartFile';
-import { MiddlewareOptions, ServiceSchema } from '../../interfaces';
 import { CrudMiddlewareFnOpts, CrudSchema } from '../crud/interfaces';
+import * as ValidateSchema from '../crudSchemaValidator.json';
+import {
+  generateAggregateFile,
+  generateCrudMethods,
+  generateDiFiles,
+  generateGeneralFiles,
+  generateIndexFile,
+  generateInterfacesFile,
+  generateRepositoryFile,
+  generateSchemaFile,
+  generateServerFile,
+  generateStartFile,
+} from '../files';
 import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from '../helpers';
+import { MiddlewareOptions, ServiceSchema } from '../interfaces';
 
 async function main() {
   try {
@@ -34,7 +36,6 @@ async function main() {
     }
 
     const directoryPath = path.dirname(pathToSchema);
-    const schemaFileName = `${path.basename(pathToSchema)}`;
     const pathToServiceSchema = path.resolve(directoryPath, 'service.schema.json');
 
     console.log('Start generation in ', directoryPath);
