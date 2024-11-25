@@ -26,6 +26,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
     if (fs.existsSync(filePath)) {
       continue;
     }
+    const useStream = Boolean(method?.options?.useStream?.request) || Boolean(method?.options?.useStream?.response);
     const requestT = method?.options?.useStream?.request ? 'Readable' : requestType;
     const returnT = method?.options?.useStream?.response ? 'Readable' : returnType;
     project.createSourceFile(
@@ -43,11 +44,13 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
             namedImports: ['methods'],
             moduleSpecifier: `../../${opts.schemaFileName}`,
           },
-          {
-            kind: StructureKind.ImportDeclaration,
-            namedImports: ['Readable'],
-            moduleSpecifier: 'stream',
-          },
+          useStream
+            ? {
+                kind: StructureKind.ImportDeclaration,
+                namedImports: ['Readable'],
+                moduleSpecifier: 'stream',
+              }
+            : '',
           {
             kind: StructureKind.ImportDeclaration,
             namedImports: ['BaseMethod'],

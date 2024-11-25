@@ -28,6 +28,7 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
       bannerComment: '',
       additionalProperties: true,
       strictIndexSignatures: true,
+      maxItems: -1,
       cwd: refPath,
       $refOptions: {},
     });
@@ -37,6 +38,7 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
       additionalProperties: true,
       strictIndexSignatures: true,
       cwd: refPath,
+      maxItems: -1,
       $refOptions: {},
     });
     interfaces += requestInterface + '\n';

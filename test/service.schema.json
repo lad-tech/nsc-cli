@@ -1,0 +1,110 @@
+{
+  "name": "Math",
+  "description": "Mathematics service",
+  "methods": {
+    "Sum": {
+      "action": "sum",
+      "description": "Addition of two numbers",
+      "options": {},
+      "request": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "number"
+          },
+          "test": {
+            "$ref": "TestService.json#/definitions/custom"
+
+          },
+          "b": {
+            "$ref": "TestService.json#/definitions/numerable"
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "result"
+        ]
+      }
+    },
+    "Fibonacci": {
+      "action": "fibonacci",
+      "description": "Return Fibonacci sequence given length",
+      "options": {
+        "useStream": {
+          "response": true
+        }
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "$ref": "TestService.json#/definitions/numerable"
+          },
+          "fakeProp": {
+            "$ref": "TestService.json#/definitions/custom"
+          }
+        },
+        "required": [
+          "length"
+        ]
+      },
+      "response": {
+        "type": "number"
+      }
+    },
+    "SumStream": {
+      "action": "sumstream",
+      "description": "Adding all the numbers of the stream",
+      "options": {
+        "useStream": {
+          "request": true
+        }
+      },
+      "request": {
+        "type": "number"
+      },
+      "response": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "result"
+        ]
+      }
+    }
+  },
+  "Ref": {
+    "$id": "TestService.json",
+    "type": "object",
+    "additionalProperties": false,
+    "definitions": {
+      "numerable": {
+        "type": "number"
+      },
+      "custom": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+
+
+
+
