@@ -9,6 +9,9 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
   const generalDirectoryPath = path.resolve(rootPath, '..', 'general');
   const paginationFilePath = path.join(generalDirectoryPath, 'pagination.ts');
   const loggerFilePath = path.join(generalDirectoryPath, 'Logger.ts');
+  const miscFilePath = path.join(generalDirectoryPath, 'misc.ts');
+  const errorFileDirectory = path.join(generalDirectoryPath, 'Errors');
+  const errorFilePath = path.join(errorFileDirectory, 'BusinessLogicError.ts');
   const configuratorFilePath = path.join(generalDirectoryPath, 'Configurator.ts');
   const indexFilePath = path.join(generalDirectoryPath, 'index.ts');
 
@@ -49,6 +52,30 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
     console.log(`Файл pagination.ts создан по пути ${paginationFilePath}`);
   }
 
+  if (!fs.existsSync(miscFilePath)) {
+    project.createSourceFile(
+      miscFilePath,
+      `
+  export function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
+}
+
+export function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+export function isDef<T>(value: T): value is Exclude<T, undefined> {
+  return typeof value !== 'undefined';
+}
+
+export function isObjectLike(value: unknown): value is { [key: string]: unknown } {
+  return typeof value === 'object' && value !== null;
+}`,
+      { overwrite: true },
+    );
+    console.log(`Файл pagination.ts создан по пути ${paginationFilePath}`);
+  }
+
   // Проверяем наличие файла Logger.ts
   if (!fs.existsSync(loggerFilePath)) {
     project.createSourceFile(
@@ -75,6 +102,140 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
           });
 
 `,
+      { overwrite: true },
+    );
+    console.log(`Файл Logger.ts создан по пути ${loggerFilePath}`);
+  }
+  // Проверяем наличие файла Errors.ts
+  if (!fs.existsSync(errorFilePath)) {
+    console.log('----->', errorFilePath);
+    project.createSourceFile(
+      errorFilePath,
+      `import { HttpStatusCode } from 'axios';
+      
+      import { isObjectLike, isString } from '../misc';
+      
+      export interface ErrorResponse {
+        name?: string;
+        message: string;
+        statusCode?: number;
+        [k: string]: unknown | undefined;
+      }
+      
+      const UNKNOWN_ERROR_MSG = 'Unknown error';
+      
+      export class BusinessLogicError {
+        static isErrorResponse(obj: unknown): obj is { error: ErrorResponse } {
+          return isObjectLike(obj) && isObjectLike(obj.error) && isString(obj.error.message);
+        }
+        static BadRequest(message: unknown) {
+          return BusinessLogicError.TransportError(message, HttpStatusCode.BadRequest);
+        }
+      
+        static Unauthorized(message: unknown) {
+          return BusinessLogicError.TransportError(message, HttpStatusCode.Unauthorized);
+        }
+      
+        static Forbidden(message: unknown) {
+          return BusinessLogicError.TransportError(message, HttpStatusCode.Forbidden);
+        }
+      
+        static NotFound(message: unknown) {
+          return BusinessLogicError.TransportError(message, HttpStatusCode.NotFound);
+        }
+      
+        static Conflict(message: unknown) {
+          return BusinessLogicError.TransportError(message, HttpStatusCode.Conflict);
+        }
+      
+        static InternalServerError(message: unknown) {
+          return BusinessLogicError.TransportError(message, HttpStatusCode.InternalServerError);
+        }
+      
+        static TransportError(err: unknown, statusCode: HttpStatusCode): { error: ErrorResponse } {
+          if (err instanceof Error) {
+            return {
+              error: {
+                name: err.name,
+                message: err.message,
+                statusCode: +statusCode,
+              },
+            };
+          }
+      
+          return {
+            error: {
+              message: isString(err) ? err : UNKNOWN_ERROR_MSG,
+              statusCode: +statusCode,
+            },
+          };
+        }
+      }
+      `,
+      { overwrite: true },
+    );
+    project.createSourceFile(
+      path.resolve(errorFileDirectory, 'index.ts'),
+      `import * as HTTP from 'node:http';
+        
+        import { ErrorResponse } from './BusinessLogicError';
+        
+        export * from './BusinessLogicError';
+        
+        const UNKNOWN_ERROR_MSG = 'Unknown error';
+        
+        export class NSCError extends Error {
+          public code: string | undefined;
+          public statusCode: number;
+        
+          constructor(params: { message: string; code?: string; statusCode?: number }) {
+            const { code, statusCode = 500, message } = params;
+            super(message);
+            this.name = this.constructor.name;
+            this.code = code;
+            this.statusCode = statusCode;
+            Error.captureStackTrace(this, this.constructor);
+          }
+          static From(params: ErrorResponse[]) {
+            const [error] = params;
+            return new NSCError({
+              statusCode: error?.statusCode || 500,
+              message: error?.message || UNKNOWN_ERROR_MSG,
+            });
+          }
+        }
+        
+        /**
+         * @deprecated Use createTransportError
+         * @param {keyof typeof HTTP.STATUS_CODES} statusCode
+         * @param {unknown} err
+         * @returns {{errors: {name: string, message: string, statusCode: number}[]} | {errors: {name: string, message: string, statusCode: number}[]}}
+         */
+        export function makeError(statusCode: keyof typeof HTTP.STATUS_CODES, err: Error | unknown) {
+          if (err instanceof Error) {
+            return {
+              errors: [
+                {
+                  name: err.name,
+                  message: err.message,
+                  statusCode: +statusCode,
+                },
+              ],
+            };
+          } else {
+            return {
+              errors: [
+                {
+                  name: UNKNOWN_ERROR_MSG,
+                  message: UNKNOWN_ERROR_MSG,
+                  statusCode: +statusCode,
+                },
+              ],
+            };
+          }
+        }
+        
+      `,
       { overwrite: true },
     );
     console.log(`Файл Logger.ts создан по пути ${loggerFilePath}`);
@@ -116,7 +277,7 @@ export const generateGeneralFiles: CrudMiddlewareFn = async opts => {
   }
 
   // Проверяем наличие и обновляем файл index.ts
-  const exports = ['pagination', 'Logger', 'Configurator'];
+  const exports = ['pagination', 'Logger', 'Configurator', 'misc', 'Errors'];
   let indexFileContent = '';
 
   if (fs.existsSync(indexFilePath)) {

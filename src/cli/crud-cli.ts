@@ -19,6 +19,7 @@ import {
   generateServerFile,
   generateStartFile,
 } from '../files';
+import { generateRoutes } from '../files/crud/generateRoutesFile';
 import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from '../helpers';
 import { MiddlewareOptions, ServiceSchema } from '../interfaces';
 
@@ -94,6 +95,8 @@ async function main() {
     await generateDiFiles(opts);
     await generateCrudMethods(opts);
     await generateCrudMethods(opts);
+    await generateRoutes(opts);
+
     // из старых файлов
     await generateInterfacesFile(baseOpts);
     await generateIndexFile(baseOpts);
