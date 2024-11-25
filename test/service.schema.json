@@ -1,5 +1,5 @@
 {
-  "name": "Math",
+  "name": "Notification",
   "description": "Mathematics service",
   "methods": {
     "NotificationCreate": {
@@ -7,15 +7,38 @@
       "action": "NotificationCreate",
       "description": "Создание Notification",
       "request": {
-        "$ref": "MathAdditional.json#/properties/Notification"
+        "$ref": "NotificationAdditional.json#/properties/Notification"
       },
       "response": {
-        "allOf": [
+        "oneOf": [
           {
-            "$ref": "MathAdditional.json#/properties/Notification"
+            "type": "object",
+            "properties": {
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/Notification"
+                  },
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/BaseEntityFields"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "data"
+            ]
           },
           {
-            "$ref": "MathAdditional.json#/properties/BaseEntityFields"
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
           }
         ]
       }
@@ -28,10 +51,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "Идентификатор",
-            "minLength": 1,
-            "maxLength": 255
+            "$ref": "NotificationAdditional.json#/properties/BaseEntityFields/properties/id"
           }
         },
         "required": [
@@ -39,27 +59,189 @@
         ]
       },
       "response": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "MathAdditional.json#/properties/Notification"
-              },
-              {
-                "$ref": "MathAdditional.json#/properties/BaseEntityFields"
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "NotificationAdditional.json#/properties/Notification"
               }
+            },
+            "required": [
+              "data"
             ]
           },
-          "errors": {
-            "$ref": "MathAdditional.json#/properties/ErrorResponse"
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "GetNotifications": {
+      "options": {},
+      "action": "GetNotifications",
+      "description": "Получение Notification с пагинацией",
+      "request": {
+        "type": "object",
+        "properties": {
+          "filter": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "$ref": "NotificationAdditional.json#/properties/Notification/properties/title"
+              },
+              "description": {
+                "$ref": "NotificationAdditional.json#/properties/Notification/properties/description"
+              },
+              "topic": {
+                "$ref": "NotificationAdditional.json#/properties/Notification/properties/topic"
+              }
+            }
           }
         }
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "meta": {
+                "$ref": "NotificationAdditional.json#/properties/PaginationMeta"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/Notification"
+                  },
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/BaseEntityFields"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "data",
+              "meta"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "UpdateNotification": {
+      "options": {},
+      "action": "UpdateNotification",
+      "description": "Обновление данных Notification",
+      "request": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "NotificationAdditional.json#/properties/BaseEntityFields/properties/id"
+          },
+          "changes": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "$ref": "NotificationAdditional.json#/properties/Notification/properties"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "changes"
+        ]
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "NotificationAdditional.json#/properties/Notification"
+              }
+            },
+            "required": [
+              "data",
+              "meta"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "DeleteNotificationById": {
+      "options": {},
+      "action": "DeleteNotificationById",
+      "description": "Удалить Notification по идентификатору",
+      "request": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "NotificationAdditional.json#/properties/BaseEntityFields/properties/id"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "NotificationAdditional.json#/properties/Notification"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
       }
     }
   },
   "Ref": {
-    "$id": "MathAdditional.json",
+    "$id": "NotificationAdditional.json",
     "type": "object",
     "properties": {
       "Notification": {
@@ -107,78 +289,27 @@
         ]
       },
       "ErrorResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "minLength": 8,
-              "maxLength": 255
-            },
-            "message": {
-              "type": "string",
-              "minLength": 8,
-              "maxLength": 255
-            },
-            "statusCode": {
-              "type": "number",
-              "description": "HTTP код ошибки",
-              "minimum": 100,
-              "maximum": 511
-            }
-          },
-          "required": [
-            "message"
-          ]
-        }
-      },
-      "pagination": {
         "type": "object",
         "properties": {
-          "page": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "Номер страницы"
+          "name": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 255
           },
-          "size": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "Размер страницы"
+          "message": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 255
           },
-          "total": {
-            "type": "integer",
-            "description": "Количество сущностей"
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP код ошибки",
+            "minimum": 100,
+            "maximum": 511
           }
         },
         "required": [
-          "page",
-          "size",
-          "total"
-        ]
-      },
-      "PaginationMeta": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "Номер страницы"
-          },
-          "size": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "Размер страницы"
-          },
-          "total": {
-            "type": "integer",
-            "description": "Количество сущностей"
-          }
-        },
-        "required": [
-          "page",
-          "size",
-          "total"
+          "message"
         ]
       },
       "BaseEntityFields": {
@@ -203,6 +334,30 @@
           "updated",
           "created",
           "id"
+        ]
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Номер страницы"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Размер страницы"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Количество сущностей"
+          }
+        },
+        "required": [
+          "page",
+          "size",
+          "total"
         ]
       }
     }

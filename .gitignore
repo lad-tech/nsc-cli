@@ -115,4 +115,4 @@ dist
 /test/methods/Fibonacci/index.ts
 /test/methods/Sum/index.ts
 /test/methods/SumStream/index.ts
-/test/start.ts
+/test/*

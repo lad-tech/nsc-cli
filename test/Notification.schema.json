@@ -3,7 +3,6 @@
   "entityData": {
     "type": "object",
     "properties": {
-
       "title": {
         "type": "string",
         "description": "Заголовок уведомления"

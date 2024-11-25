@@ -1,28 +1,25 @@
 export const baseSchemas = {
   ErrorResponse: {
-    type: 'array',
-    items: {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string',
-          minLength: 8,
-          maxLength: 255,
-        },
-        message: {
-          type: 'string',
-          minLength: 8,
-          maxLength: 255,
-        },
-        statusCode: {
-          type: 'number',
-          description: 'HTTP код ошибки',
-          minimum: 100,
-          maximum: 511,
-        },
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string',
+        minLength: 8,
+        maxLength: 255,
       },
-      required: ['message'],
+      message: {
+        type: 'string',
+        minLength: 8,
+        maxLength: 255,
+      },
+      statusCode: {
+        type: 'number',
+        description: 'HTTP код ошибки',
+        minimum: 100,
+        maximum: 511,
+      },
     },
+    required: ['message'],
   },
   BaseEntityFields: {
     type: 'object',
