@@ -40,7 +40,19 @@ async function main() {
 
     console.log('Start generation in ', directoryPath);
     const crudSchema: CrudSchema = (await import(pathToSchema)).default;
-    const serviceSchema: ServiceSchema = (await import(pathToServiceSchema)).default;
+    if (!fs.existsSync(pathToServiceSchema)) {
+      fs.writeFileSync(
+        pathToServiceSchema,
+        JSON.stringify(
+          {
+            methods: {},
+          },
+          null,
+          2,
+        ),
+      );
+    }
+    const serviceSchema: ServiceSchema = (await import(pathToServiceSchema)).default || {};
 
     const validate = new Ajv().compile(ValidateSchema);
     const valid = validate(crudSchema);
