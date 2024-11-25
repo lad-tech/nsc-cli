@@ -58,13 +58,15 @@ async function main() {
     const valid = validate(crudSchema);
     if (!valid) {
       console.log(validate.errors);
-      throw new Error('validate error');
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      throw new Error('validate error', validate.errors?.toString());
     }
     const project = new Project(DefaultProjectSettings);
     const [firstSymbol, ...otherSymbols] = crudSchema.entityName;
     crudSchema.entityName = `${firstSymbol.toUpperCase()}${otherSymbols.join('').toLowerCase()}`;
     const tsconfigPath = path.join(directoryPath, 'tsconfig.json');
-    //  ts-config
+    // ts-config
     if (!fs.existsSync(tsconfigPath)) {
       project.createSourceFile(tsconfigPath, JSON.stringify(BaseTsConfig, null, 2), {
         overwrite: false,
@@ -89,13 +91,15 @@ async function main() {
     await generateGeneralFiles(opts);
     await generateAggregateFile(opts);
     await generateRepositoryFile(opts);
-    await generateInterfacesFile(baseOpts);
     await generateDiFiles(opts);
     await generateCrudMethods(opts);
     await generateCrudMethods(opts);
+    // из старых файлов
+    await generateInterfacesFile(baseOpts);
     await generateIndexFile(baseOpts);
     await generateServerFile(baseOpts);
     await generateStartFile(baseOpts);
+    // стилизация
     await setStyleInProject(project);
   } catch (err) {
     console.error(err);
