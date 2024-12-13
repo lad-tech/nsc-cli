@@ -72,10 +72,10 @@ export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptio
 
   generalEventsData.forEach(e => {
     externalEvents += ` ${e.name}: ${e.isStream ? 'EventStreamHandler' : 'EventHandler'}<${e.interfaceName}>;\n`;
-    internalEvents += `${e.name}: (params: ${e.interfaceName}) => void;\n`;
+    internalEvents += `${e.name}: (params: ${e.interfaceName}, uniqId?: string) => void;\n`;
   });
   externalEvents += '} \n';
-  internalEvents += ' \n [eventName: string]: (params: any) => void; \n } \n';
+  internalEvents += ' \n [eventName: string]: (params: any, uniqId?: string) => void; \n } \n';
   if (generalEventsData.length) {
     interfaces += internalEvents + '\n' + externalEvents + '\n';
   }
