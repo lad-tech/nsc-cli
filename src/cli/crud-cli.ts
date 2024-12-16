@@ -42,11 +42,18 @@ async function main() {
     console.log('Start generation in ', directoryPath);
     const crudSchema: CrudSchema = (await import(pathToSchema)).default;
     if (!fs.existsSync(pathToServiceSchema)) {
+      const folderName = path.basename(path.dirname(pathToSchema));
+      const capitalizedFolderName = folderName.charAt(0).toUpperCase() + folderName.slice(1);
+
       fs.writeFileSync(
         pathToServiceSchema,
         JSON.stringify(
           {
-            methods: {},
+            "name": `${capitalizedFolderName}`,
+            "description": "Generated service",
+            methods: {
+
+            },
           },
           null,
           2,

@@ -1,4 +1,4 @@
-[{
+{
   "entityName": "User",
   "entityData": {
     "type": "object",
@@ -66,5 +66,5 @@
     },
     "required": ["id", "username", "email", "password", "role", "createdAt", "isActive"]
   },
-  "filterColumns": ["username", "email", "role", "isActive"],
-}]
+  "filterColumns": ["username", "email", "role", "isActive"]
+}
