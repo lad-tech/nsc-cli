@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "entityName": {
+      "type": "string",
+      "description": "Название сущности"
+    },
+    "entityData": {
+      "type": "object",
+      "properties": {}
+    },
+    "filterColumns": {
+      "type": "array",
+      "description": "Столбцы для фильтрации",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    }
+  },
+  "required": ["entityName", "entityData", "filterColumns"],
+  "additionalProperties": false
+}

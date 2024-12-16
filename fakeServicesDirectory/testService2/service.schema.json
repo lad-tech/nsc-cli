@@ -1,0 +1,377 @@
+{
+  "name": "Notification",
+  "description": "Mathematics service",
+  "methods": {
+    "NotificationCreate": {
+      "options": {},
+      "action": "NotificationCreate",
+      "description": "Создание Notification",
+      "request": {
+        "$ref": "NotificationAdditional.json#/properties/Notification"
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/Notification"
+                  },
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/BaseEntityFields"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "data"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "GetNotificationById": {
+      "options": {},
+      "action": "GetNotificationById",
+      "description": "Получение Notification",
+      "request": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "NotificationAdditional.json#/properties/BaseEntityFields/properties/id"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "NotificationAdditional.json#/properties/Notification"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "GetNotifications": {
+      "options": {},
+      "action": "GetNotifications",
+      "description": "Получение Notification с пагинацией",
+      "request": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Номер страницы",
+            "default": 1
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Количество сущностей",
+            "default": 12
+          },
+          "filter": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "$ref": "NotificationAdditional.json#/properties/Notification/properties/title"
+              },
+              "description": {
+                "$ref": "NotificationAdditional.json#/properties/Notification/properties/description"
+              },
+              "topic": {
+                "$ref": "NotificationAdditional.json#/properties/Notification/properties/topic"
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "meta": {
+                "$ref": "NotificationAdditional.json#/properties/PaginationMeta"
+              },
+              "data": {
+                "allOf": [
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/Notification"
+                  },
+                  {
+                    "$ref": "NotificationAdditional.json#/properties/BaseEntityFields"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "data",
+              "meta"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "UpdateNotification": {
+      "options": {},
+      "action": "UpdateNotification",
+      "description": "Обновление данных Notification",
+      "request": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "NotificationAdditional.json#/properties/BaseEntityFields/properties/id"
+          },
+          "changes": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "$ref": "NotificationAdditional.json#/properties/Notification/properties"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "changes"
+        ]
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "NotificationAdditional.json#/properties/Notification"
+              }
+            },
+            "required": [
+              "data",
+              "meta"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    },
+    "DeleteNotificationById": {
+      "options": {},
+      "action": "DeleteNotificationById",
+      "description": "Удалить Notification по идентификатору",
+      "request": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "NotificationAdditional.json#/properties/BaseEntityFields/properties/id"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "NotificationAdditional.json#/properties/Notification"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "$ref": "NotificationAdditional.json#/properties/ErrorResponse"
+              }
+            },
+            "required": [
+              "error"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "Ref": {
+    "$id": "NotificationAdditional.json",
+    "type": "object",
+    "properties": {
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Заголовок уведомления"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание уведомления"
+          },
+          "deeplink": {
+            "type": "string",
+            "description": "URL для диплинков"
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "general",
+              "direct"
+            ],
+            "description": "Тип уведомления general - всем, direct конкретным пользователям, нужно передать id пользователей"
+          },
+          "fcm": {
+            "type": "array",
+            "description": "Fcm пользователей, для которых это уведомление. Если пустой, то для всех",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userIds": {
+            "type": "array",
+            "description": "ID пользователей, для которых это уведомление. Если пустой, то для всех",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "topic"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 255
+          },
+          "message": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 255
+          },
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP код ошибки",
+            "minimum": 100,
+            "maximum": 511
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "BaseEntityFields": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата создания"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Дата обновления"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "updated",
+          "created",
+          "id"
+        ]
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Номер страницы"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Размер страницы"
+          },
+          "total": {
+            "type": "integer",
+            "description": "Количество сущностей"
+          }
+        },
+        "required": [
+          "page",
+          "size",
+          "total"
+        ]
+      }
+    }
+  }
+}
