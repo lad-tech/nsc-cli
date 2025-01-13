@@ -8,7 +8,7 @@ export const DefaultProjectSettings: ProjectOptions = {
     useTrailingCommas: true,
   },
   compilerOptions: {
-    target: ScriptTarget.ES2021,
+    target: ScriptTarget.ES2022,
     declaration: true,
     sourceMap: true,
     strictNullChecks: true,

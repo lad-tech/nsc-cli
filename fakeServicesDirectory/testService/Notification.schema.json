@@ -1,0 +1,70 @@
+{
+  "entityName": "User",
+  "entityData": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Уникальный идентификатор пользователя"
+      },
+      "username": {
+        "type": "string",
+        "description": "Имя пользователя"
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "description": "Электронная почта пользователя"
+      },
+      "password": {
+        "type": "string",
+        "description": "Пароль пользователя"
+      },
+      "role": {
+        "type": "string",
+        "enum": ["admin", "moderator", "user"],
+        "description": "Роль пользователя в системе"
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Дата и время создания аккаунта"
+      },
+      "updatedAt": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Дата и время последнего обновления аккаунта"
+      },
+      "isActive": {
+        "type": "boolean",
+        "description": "Статус активности пользователя"
+      },
+      "profile": {
+        "type": "object",
+        "description": "Дополнительная информация о пользователе",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "Имя"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Фамилия"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL аватара пользователя"
+          },
+          "bio": {
+            "type": "string",
+            "description": "Краткая биография пользователя"
+          }
+        },
+        "required": ["firstName", "lastName"]
+      }
+    },
+    "required": ["id", "username", "email", "password", "role", "createdAt", "isActive"]
+  },
+  "filterColumns": ["username", "email", "role", "isActive"]
+}
