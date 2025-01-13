@@ -88,6 +88,12 @@ export const generateRepositoryFile: CrudMiddlewareFn = async opts => {
           scope: Scope.Private,
         },
         {
+          name: 'revisions',
+          type: `Map<${className},number>`,
+          scope: Scope.Private,
+          initializer :'new Map()'
+        },
+        {
           name: 'collection',
           type: `Collection<${className}Db>`,
           scope: Scope.Public,
@@ -176,6 +182,7 @@ export const generateRepositoryFile: CrudMiddlewareFn = async opts => {
       parameters: [{ name: 'aggregate', type: className }],
       statements: `
     const dbEntity = aggregate.toJSON();
+    
     const r = await this.collection.findOneAndUpdate(
       { id: dbEntity.id },
       { $setOnInsert: dbEntity },
@@ -203,8 +210,9 @@ export const generateRepositoryFile: CrudMiddlewareFn = async opts => {
     );
 
     assert(r);
+    const entity = new ${className}(r.value);
 
-    return ${className}.fromDB(r.value);
+    return entity
   `,
     });
 

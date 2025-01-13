@@ -76,7 +76,7 @@ export const generateSchemaFile: CrudMiddlewareFn = async opts => {
   };
 
   // findOneById
-  const findOneMethodName = `Get${crudSchema.entityName}ById`;
+  const findOneMethodName = `GetOne${crudSchema.entityName}`;
   serviceSchema.methods[findOneMethodName] = {
     options: {},
     action: findOneMethodName,
@@ -115,7 +115,7 @@ export const generateSchemaFile: CrudMiddlewareFn = async opts => {
   };
 
   // findMany
-  const findManyMethodName = `Get${crudSchema.entityName}s`;
+  const findManyMethodName = `List${crudSchema.entityName}s`;
   serviceSchema.methods[findManyMethodName] = {
     options: {},
     action: findManyMethodName,

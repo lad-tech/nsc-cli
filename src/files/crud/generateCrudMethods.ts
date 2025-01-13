@@ -20,8 +20,8 @@ export const generateCrudMethods: CrudMiddlewareFn = async opts => {
   // Определение CRUD-операций и соответствующих им методных имен
   const crudOperations = [
     { operation: 'Create', methodName: `${entityName}Create` },
-    { operation: 'Read', methodName: `Get${entityName}ById` },
-    { operation: 'Get', methodName: `Get${entityName}s` },
+    { operation: 'Read', methodName: `GetOne${entityName}` },
+    { operation: 'Get', methodName: `List${entityName}s` },
     { operation: 'Update', methodName: `Update${entityName}` },
     { operation: 'Delete', methodName: `Delete${entityName}ById` },
   ];
