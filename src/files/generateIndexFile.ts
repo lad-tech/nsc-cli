@@ -98,7 +98,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           declarationKind: VariableDeclarationKind.Const,
           declarations: [
             {
-              name: '{ name, methods, Ref }',
+              name: hasEvents ? '{ name, methods, Ref, events }' : '{ name, methods, Ref }',
               initializer: 'serviceSchema',
             },
           ],
