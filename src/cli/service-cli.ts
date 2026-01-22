@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-import Ajv from 'ajv';
+import { Ajv } from 'ajv';
 import { Command } from 'commander';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
-import { ServiceSchema } from '../interfaces.js';
 import { MicroService } from '../MicroService.js';
 import ValidateSchema from '../serviceSchemaValidator.json' with { type: 'json' };
 import { logger } from '../logger/index.js';
@@ -54,7 +53,7 @@ Examples:
 
     logger.info('Starting generation in:', directoryPath);
 
-    const schema: ServiceSchema = (await import(pathToSchema)).default;
+    const schema = JSON.parse(readFileSync(pathToSchema, 'utf-8'));
     validateSchema(schema);
 
     const validate = new Ajv().compile(ValidateSchema);
