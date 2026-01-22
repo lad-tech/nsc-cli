@@ -98,7 +98,12 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           declarationKind: VariableDeclarationKind.Const,
           declarations: [
             {
-              name: hasEvents ? '{ name, methods, Ref, events }' : '{ name, methods, Ref }',
+              name: (() => {
+                const fields = ['name', 'methods'];
+                if (schema.Ref?.$id) fields.push('Ref');
+                if (hasEvents) fields.push('events');
+                return `{ ${fields.join(', ')} }`;
+              })(),
               initializer: 'serviceSchema',
             },
           ],

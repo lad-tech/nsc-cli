@@ -81,7 +81,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
                 name: 'handler',
                 isAsync: true,
                 returnType: `Promise<${returnT}>`,
-                statements: `this.logger.info('${methodName} started'); \n // TODO WTF??? \n throw new Error('Not Implemented');`,
+                statements: `this.logger.info('${methodName} started'); \n // TODO: Implement ${methodName} handler logic \n throw new Error('Method not implemented');`,
                 parameters: [
                   {
                     kind: StructureKind.Parameter,
