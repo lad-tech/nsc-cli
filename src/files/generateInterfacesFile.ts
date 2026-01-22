@@ -7,6 +7,11 @@ import { FILE_EXTENTION, INTERFACES_FILE_NAME } from '../constants.js';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
 import { isIgnore } from '../utils.js';
 
+/**
+ * Функция-middleware для генерации TypeScript интерфейсов из JSON схем
+ * @param opts - Опции генерации, включая проект, схему и путь к директории
+ * @throws {GenerationError} Если генерация файла не удалась
+ */
 export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;
   const filePath = path.join(directoryPath, `${INTERFACES_FILE_NAME}${FILE_EXTENTION}`);

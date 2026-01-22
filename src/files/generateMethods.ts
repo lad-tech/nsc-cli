@@ -1,30 +1,45 @@
-import fs from 'fs';
+import { mkdir, access } from 'fs/promises';
+import { constants } from 'fs';
 import * as path from 'path';
 import { StructureKind, VariableDeclarationKind } from 'ts-morph';
 import { FILE_EXTENTION, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants.js';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
 
+/**
+ * Функция-middleware для генерации файлов обработчиков методов и тестовых файлов
+ * @param opts - Опции генерации, включая проект, схему и путь к директории
+ * @throws {GenerationError} Если генерация файла не удалась
+ */
 export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;
 
   const methodsDirectoryPath = path.join(directoryPath, 'methods');
-  if (!fs.existsSync(methodsDirectoryPath)) {
-    fs.mkdirSync(methodsDirectoryPath);
+  try {
+    await access(methodsDirectoryPath, constants.F_OK);
+  } catch {
+    await mkdir(methodsDirectoryPath);
   }
+
   for (const methodName in schema.methods) {
     const method = schema.methods[methodName];
     const returnType = `${methodName}Response`;
     const requestType = `${methodName}Request`;
 
     const methodsDirectoryFolderPath = path.join(directoryPath, 'methods', methodName);
-    if (!fs.existsSync(methodsDirectoryFolderPath)) {
-      fs.mkdirSync(methodsDirectoryFolderPath);
+    try {
+      await access(methodsDirectoryFolderPath, constants.F_OK);
+    } catch {
+      await mkdir(methodsDirectoryFolderPath);
     }
+
     const filePath = path.join(methodsDirectoryFolderPath, `index${FILE_EXTENTION}`);
     const testFilePath = path.join(methodsDirectoryFolderPath, `index.test${FILE_EXTENTION}`);
 
-    if (fs.existsSync(filePath)) {
-      continue;
+    try {
+      await access(filePath, constants.F_OK);
+      continue; // File exists
+    } catch {
+      // File doesn't exist, continue with generation
     }
     const useStream = Boolean(method?.options?.useStream?.request) || Boolean(method?.options?.useStream?.response);
     const requestT = method?.options?.useStream?.request ? 'Readable' : requestType;
@@ -55,10 +70,10 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
 
           useStream
             ? {
-                kind: StructureKind.ImportDeclaration,
-                namedImports: ['Readable'],
-                moduleSpecifier: 'stream',
-              }
+              kind: StructureKind.ImportDeclaration,
+              namedImports: ['Readable'],
+              moduleSpecifier: 'stream',
+            }
             : '',
           {
             kind: StructureKind.ImportDeclaration,

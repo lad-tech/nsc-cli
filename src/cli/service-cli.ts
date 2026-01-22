@@ -2,40 +2,65 @@
 
 import Ajv from 'ajv';
 import { Command } from 'commander';
-import * as fs from 'fs';
-import * as path from 'path';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join, resolve } from 'path';
 import { ServiceSchema } from '../interfaces.js';
 import { MicroService } from '../MicroService.js';
 import ValidateSchema from '../serviceSchemaValidator.json' with { type: 'json' };
+import { logger } from '../logger/index.js';
+import { CLIError, SchemaValidationError } from '../errors/index.js';
+import { validateSchemaPath, validateSchema } from '../validation/index.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json'), 'utf-8'));
 
 async function main() {
   try {
     const program = new Command();
     program
-      .description('Генерация нового сервиса по json schema')
-      .requiredOption('--schema  <path>', 'Путь до схемы')
-      .createOption('--prettierConfig <string>', 'Путь до конфига prettier');
-    program.parse();
+      .name('nsc-cli')
+      .version(packageJson.version)
+      .description('Generate microservice from JSON schema')
+      .requiredOption('-s, --schema <path>', 'Path to service schema (must be .json file)')
+      .option('-p, --prettier-config <path>', 'Path to prettier config file')
+      .option('-v, --verbose', 'Enable verbose logging')
+      .option('-o, --output <path>', 'Output directory (defaults to schema directory)')
+      .addHelpText(
+        'after',
+        `
+Examples:
+  $ nsc-cli --schema ./service.schema.json
+  $ nsc-cli -s ./service.schema.json -v
+  $ nsc-cli -s ./service.schema.json -p ./.prettierrc
+  `,
+      )
+      .parse();
 
     const options = program.opts();
-    const prettierConfigPath = options.prettierConfig;
-    const pathToSchema = path.resolve(options.schema);
 
-    if (!fs.existsSync(pathToSchema)) {
-      throw new Error(`${pathToSchema} not found`);
+    // Enable verbose logging if requested
+    if (options.verbose) {
+      process.env.LOG_LEVEL = 'DEBUG';
     }
 
-    const directoryPath = path.dirname(pathToSchema);
-    const schemaFileName = `${path.basename(pathToSchema)}`;
+    const prettierConfigPath = options.prettierConfig;
+    const pathToSchema = resolve(options.schema);
 
-    console.log('Start generation in ', directoryPath);
+    validateSchemaPath(pathToSchema);
+
+    const directoryPath = options.output || dirname(pathToSchema);
+    const schemaFileName = `${pathToSchema.split('/').pop()}`;
+
+    logger.info('Starting generation in:', directoryPath);
 
     const schema: ServiceSchema = (await import(pathToSchema)).default;
+    validateSchema(schema);
+
     const validate = new Ajv().compile(ValidateSchema);
     const valid = validate(schema);
     if (!valid) {
-      console.log(validate.errors);
-      throw new Error('validate error');
+      throw new SchemaValidationError('Schema validation failed', validate.errors || []);
     }
 
     await new MicroService().generate({
@@ -45,9 +70,19 @@ async function main() {
       schemaFileName,
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof CLIError) {
+      logger.error(err.message);
+      if (err instanceof SchemaValidationError) {
+        logger.error('Validation errors:', JSON.stringify(err.errors, null, 2));
+      }
+      process.exit(err.exitCode);
+    }
+    logger.error('Unexpected error:', err);
     process.exit(1);
   }
 }
 
-main().catch(console.error);
+main().catch(err => {
+  logger.error('Fatal error:', err);
+  process.exit(1);
+});

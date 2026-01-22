@@ -6,10 +6,21 @@ import {
   SyntaxKind,
   VariableDeclarationKind,
 } from 'ts-morph';
-import { FILE_EXTENTION, SERVICE_RUN_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants.js';
+import {
+  FILE_EXTENTION,
+  SERVICE_RUN_FILE_NAME,
+  TOOLKIT_MODULE_NAME,
+  DEFAULT_NATS_SERVER,
+  DEFAULT_NATS_MAX_RECONNECT_ATTEMPTS,
+} from '../constants.js';
 import { MiddlewareFn, MiddlewareOptions, ServiceSchema } from '../interfaces.js';
 import { isIgnore } from '../utils.js';
 
+/**
+ * Функция-middleware для генерации файла сервиса с функцией main и подключением к NATS
+ * @param opts - Опции генерации, включая проект, схему и путь к директории
+ * @throws {GenerationError} Если генерация файла не удалась
+ */
 export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;
   const filePath = path.join(directoryPath, `${SERVICE_RUN_FILE_NAME}${FILE_EXTENTION}`);
@@ -17,8 +28,6 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     return;
   }
   const existsFile = project.addSourceFileAtPathIfExists(filePath);
-
-  const shutdown: string | undefined = '';
   const hasEvents = Object.keys(schema.events?.list || {}).length > 0;
 
   const methodImports: ImportDeclarationStructure[] = getMethodsImports(schema, hasEvents, opts.schemaFileName);
@@ -40,31 +49,8 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     });
 
     existsFile.addImportDeclarations(methodImports);
-    
-    // // Добавляем деструктуризацию schemaData после импортов
-    // const importDeclarations = existsFile.getImportDeclarations();
-    // const schemaImport = importDeclarations.find(
-    //   i => i.getModuleSpecifierValue() === `./${opts.schemaFileName}`
-    // );
-    // if (schemaImport) {
-    //   const importIndex = schemaImport.getChildIndex();
-    //   const nextStatement = existsFile.getStatements()[importIndex + 1];
-    //   // Проверяем, что следующая строка не является уже деструктуризацией schemaData
-    //   if (!nextStatement || 
-    //       (nextStatement.getKind() === SyntaxKind.VariableStatement && 
-    //        !nextStatement.getText().includes('schemaData'))) {
-    //     existsFile.insertVariableStatement(importIndex + 1, {
-    //       declarationKind: VariableDeclarationKind.Const,
-    //       declarations: [
-    //         {
-    //           name: hasEvents ? '{ name, events }' : '{ name }',
-    //           initializer: 'schemaData',
-    //         },
-    //       ],
-    //     });
-    //   }
-    // }
-    
+
+
     const service = existsFile
       .getFunctionOrThrow('main')
       .getDescendantsOfKind(SyntaxKind.NewExpression)
@@ -99,13 +85,9 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     brokerConnection,
     methods: [${methodNames.join(',')}],
    ${hasEvents ? 'events,' : ''}
-    gracefulShutdown:${
-      shutdown?.length
-        ? shutdown
-        : JSON.stringify({
-            additional: [],
-          })
-    }
+    gracefulShutdown:${JSON.stringify({
+      additional: [],
+    })}
   }`;
     const file = project.createSourceFile(
       filePath,
@@ -155,8 +137,8 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
                     initializer:
                       '  broker ||\n' +
                       '      (await connect({\n' +
-                      '        servers: [`localhost:4222`],\n' +
-                      '        maxReconnectAttempts: -1,\n' +
+                      `        servers: [\`${DEFAULT_NATS_SERVER}\`],\n` +
+                      `        maxReconnectAttempts: ${DEFAULT_NATS_MAX_RECONNECT_ATTEMPTS},\n` +
                       '      }))',
                   },
                 ],
@@ -179,6 +161,13 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   }
 };
 
+/**
+ * Получение деклараций импорта для методов и схемы
+ * @param schema - Схема сервиса
+ * @param hasEvents - Есть ли у сервиса события
+ * @param schemaFileName - Имя файла схемы
+ * @returns Массив структур деклараций импорта
+ */
 function getMethodsImports(schema: ServiceSchema, hasEvents: boolean, schemaFileName: string) {
   const methodImports: ImportDeclarationStructure[] = Object.keys(schema.methods).map(name => {
     return {

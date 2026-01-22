@@ -4,6 +4,11 @@ import * as path from 'path';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
 import { isIgnore } from '../utils.js';
 
+/**
+ * Функция-middleware для генерации package.json с конфигурацией ESM
+ * @param opts - Опции генерации, включая проект, схему и путь к директории
+ * @throws {GenerationError} Если генерация файла не удалась
+ */
 export const generatePackageJson: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { schema, directoryPath } = opts;
   const packageJsonPath = path.join(directoryPath, 'package.json');
@@ -12,7 +17,11 @@ export const generatePackageJson: MiddlewareFn = async (opts: MiddlewareOptions)
     return;
   }
   if (!fs.existsSync(packageJsonPath)) {
-    execSync(` cd ${directoryPath} && npm init -y`);
+    execSync('npm init -y', {
+      cwd: directoryPath,
+      stdio: 'pipe',
+      encoding: 'utf-8',
+    });
     const json = JSON.parse(fs.readFileSync(packageJsonPath).toString());
     json.name = schema.name.toLowerCase();
     json.type = "module";

@@ -1,35 +1,44 @@
 import { Project } from 'ts-morph';
+import { JSONSchema } from 'json-schema-to-typescript';
+
+/**
+ * Определение типа JSON схемы
+ */
+export type JsonSchema = JSONSchema;
 
 type JsonSchemaLike = {
   $id: string;
   type: string;
-  properties: Record<string, any>;
+  properties: Record<string, JsonSchema>;
   [key: string]: unknown;
 };
+
+/**
+ * Определение метода в схеме сервиса
+ */
+export interface MethodDefinition {
+  action: string;
+  description: string;
+  request: JsonSchema;
+  response: JsonSchema;
+  options: Partial<{
+    cache: number;
+    runTimeValidation?: {
+      request?: boolean;
+      response?: boolean;
+    };
+    useStream?: {
+      request?: boolean;
+      response?: boolean;
+    };
+  }>;
+}
+
 export interface ServiceSchema {
   name: string;
   description: string;
   Ref?: JsonSchemaLike;
-  methods: Record<
-    string,
-    {
-      action: string;
-      description: string;
-      request: any;
-      response: any;
-      options: Partial<{
-        cache: number;
-        runTimeValidation?: {
-          request?: boolean;
-          response?: boolean;
-        };
-        useStream?: {
-          request?: boolean;
-          response?: boolean;
-        };
-      }>;
-    }
-  >;
+  methods: Record<string, MethodDefinition>;
   events?: {
     streamOptions: {
       prefix: string;

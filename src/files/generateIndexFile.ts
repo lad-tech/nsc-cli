@@ -10,6 +10,11 @@ import {
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
 import { isIgnore } from '../utils.js';
 
+/**
+ * Функция-middleware для генерации индексного файла с классом клиента
+ * @param opts - Опции генерации, включая проект, схему и путь к директории
+ * @throws {GenerationError} Если генерация файла не удалась
+ */
 export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath, schemaFileName } = opts;
   const methods: OptionalKind<MethodDeclarationStructure>[] = [];

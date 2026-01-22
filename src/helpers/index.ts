@@ -58,7 +58,7 @@ export async function setStyleInProject(project: Project, prettierConfigPath?: s
     const confFile = await fs.readFile(prettierConfigFilePath);
     prettierConf = JSON.parse(confFile.toString());
   } catch {
-    console.log('Use default style guide');
+    // Use default prettier configuration
   }
   prettierConf['parser'] = 'babel-ts';
   for (const file of project.getSourceFiles()) {

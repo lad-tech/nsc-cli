@@ -3,6 +3,11 @@ import { FILE_EXTENTION, START_FILE_NAME } from '../constants.js';
 import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
 import { isIgnore } from '../utils.js';
 
+/**
+ * Функция-middleware для генерации стартового файла, который вызывает функцию main
+ * @param opts - Опции генерации, включая проект, схему и путь к директории
+ * @throws {GenerationError} Если генерация файла не удалась
+ */
 export const generateStartFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, directoryPath } = opts;
 
