@@ -184,7 +184,7 @@ function getMethodsImports(schema: ServiceSchema, hasEvents: boolean, schemaFile
     return {
       kind: StructureKind.ImportDeclaration,
       namedImports: [name],
-      moduleSpecifier: `./methods/${name}.js`,
+      moduleSpecifier: `./methods/${name}/index.js`,
     };
   });
   methodImports.push({
