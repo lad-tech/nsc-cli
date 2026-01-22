@@ -13,11 +13,13 @@ export const generateStartFile: MiddlewareFn = async (opts: MiddlewareOptions): 
 
   const file = project.createSourceFile(
     filePath,
-    `import { main } from './service';
-    main().catch(e => {
-     console.error(e);
-     console.error(e.stack);
-    }); `,
+    `import { main } from './service.js';
+try {
+  await main();
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}`,
     { overwrite: true },
   );
   await file.save();

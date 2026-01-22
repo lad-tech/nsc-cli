@@ -28,15 +28,43 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
   if (existsFile) {
     const imports = existsFile.getImportDeclarations();
     imports.forEach(i => {
+      const specifier = i.getModuleSpecifierValue();
       if (
-        i.getModuleSpecifierValue().startsWith('./methods/') ||
-        i.getModuleSpecifierValue().startsWith(`./${opts.schemaFileName}`)
+        specifier.startsWith('./methods/') ||
+        specifier === `./${opts.schemaFileName}` ||
+        specifier === `./${opts.schemaFileName}.js` ||
+        (opts.schemaFileName.endsWith('.json') && specifier === `./${opts.schemaFileName}`)
       ) {
         i.remove();
       }
     });
 
     existsFile.addImportDeclarations(methodImports);
+    
+    // // Добавляем деструктуризацию schemaData после импортов
+    // const importDeclarations = existsFile.getImportDeclarations();
+    // const schemaImport = importDeclarations.find(
+    //   i => i.getModuleSpecifierValue() === `./${opts.schemaFileName}`
+    // );
+    // if (schemaImport) {
+    //   const importIndex = schemaImport.getChildIndex();
+    //   const nextStatement = existsFile.getStatements()[importIndex + 1];
+    //   // Проверяем, что следующая строка не является уже деструктуризацией schemaData
+    //   if (!nextStatement || 
+    //       (nextStatement.getKind() === SyntaxKind.VariableStatement && 
+    //        !nextStatement.getText().includes('schemaData'))) {
+    //     existsFile.insertVariableStatement(importIndex + 1, {
+    //       declarationKind: VariableDeclarationKind.Const,
+    //       declarations: [
+    //         {
+    //           name: hasEvents ? '{ name, events }' : '{ name }',
+    //           initializer: 'schemaData',
+    //         },
+    //       ],
+    //     });
+    //   }
+    // }
+    
     const service = existsFile
       .getFunctionOrThrow('main')
       .getDescendantsOfKind(SyntaxKind.NewExpression)
@@ -95,6 +123,16 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
           },
           ...methodImports,
           {
+            kind: StructureKind.VariableStatement,
+            declarationKind: VariableDeclarationKind.Const,
+            declarations: [
+              {
+                name: hasEvents ? '{ name, events }' : '{ name }',
+                initializer: 'serviceSchema',
+              },
+            ],
+          },
+          {
             kind: StructureKind.Function,
             name: 'main',
             isExported: true,
@@ -146,13 +184,20 @@ function getMethodsImports(schema: ServiceSchema, hasEvents: boolean, schemaFile
     return {
       kind: StructureKind.ImportDeclaration,
       namedImports: [name],
-      moduleSpecifier: `./methods/${name}`,
+      moduleSpecifier: `./methods/${name}.js`,
     };
   });
   methodImports.push({
     kind: StructureKind.ImportDeclaration,
-    namedImports: hasEvents ? ['name', 'events'] : ['name'],
+    defaultImport: 'serviceSchema',
     moduleSpecifier: `./${schemaFileName}`,
+    attributes: [
+      {
+        kind: StructureKind.ImportAttribute,
+        name: 'type',
+        value: 'json',
+      },
+    ],
   });
   return methodImports;
 }

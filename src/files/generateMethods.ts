@@ -37,13 +37,22 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
             kind: StructureKind.ImportDeclaration,
             isTypeOnly: true,
             namedImports: [returnType, requestType],
-            moduleSpecifier: `../../${INTERFACES_FILE_NAME}`,
+            moduleSpecifier: `../../${INTERFACES_FILE_NAME}.js`,
           },
           {
             kind: StructureKind.ImportDeclaration,
-            namedImports: ['methods'],
+            defaultImport: 'serviceSchema',
             moduleSpecifier: `../../${opts.schemaFileName}`,
+            attributes: [
+              {
+                kind: StructureKind.ImportAttribute,
+                name: 'type',
+                value: 'json',
+              },
+            ],
           },
+
+
           useStream
             ? {
                 kind: StructureKind.ImportDeclaration,
@@ -64,7 +73,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
                 kind: StructureKind.Property,
                 name: 'settings',
                 isStatic: true,
-                initializer: `methods.${methodName}`,
+                initializer: `serviceSchema.methods.${methodName}`,
               },
             ],
             methods: [

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, StructureKind } from 'ts-morph';
+import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, StructureKind, VariableDeclarationKind } from 'ts-morph';
 import {
   FILE_EXTENTION,
   INDEX_FILE_NAME,
@@ -77,14 +77,33 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           isTypeOnly: true,
           namedImports: imports,
 
-          moduleSpecifier: `./${INTERFACES_FILE_NAME}`,
+          moduleSpecifier: `./${INTERFACES_FILE_NAME}.js`,
         },
 
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: importFields,
+          defaultImport: "serviceSchema",
           moduleSpecifier: `./${schemaFileName}`,
+          attributes: [
+            {
+              kind: StructureKind.ImportAttribute,
+              name: 'type',
+              value: 'json',
+
+            },
+          ],
         },
+        {
+          kind: StructureKind.VariableStatement,
+          declarationKind: VariableDeclarationKind.Const,
+          declarations: [
+            {
+              name: '{ name, methods, Ref }',
+              initializer: 'serviceSchema',
+            },
+          ],
+        },
+
         {
           kind: StructureKind.ImportDeclaration,
           namedImports: ['Client', 'Baggage', 'CacheSettings'],
@@ -103,10 +122,10 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         },
         isUseStream
           ? {
-              kind: StructureKind.ImportDeclaration,
-              namedImports: ['Readable'],
-              moduleSpecifier: 'stream',
-            }
+            kind: StructureKind.ImportDeclaration,
+            namedImports: ['Readable'],
+            moduleSpecifier: 'stream',
+          }
           : '',
         {
           kind: StructureKind.Class,
@@ -115,9 +134,8 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           ctors: [
             {
               kind: StructureKind.Constructor,
-              statements: `super({ broker, serviceName: name, baggage, cache,loggerOutputFormatter ${
-                hasEvents ? ',events' : ''
-              } ${schema.Ref?.$id ? ',Ref' : ''} }); `,
+              statements: `super({ broker, serviceName: name, baggage, cache,loggerOutputFormatter ${hasEvents ? ',events' : ''
+                } ${schema.Ref?.$id ? ',Ref' : ''} }); `,
               parameters: [
                 {
                   kind: StructureKind.Parameter,
