@@ -3,9 +3,9 @@ import { compile } from 'json-schema-to-typescript';
 import * as Path from 'path';
 import * as path from 'path';
 import { StructureKind } from 'ts-morph';
-import { FILE_EXTENTION, INTERFACES_FILE_NAME } from '../constants';
-import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
-import { isIgnore } from '../utils';
+import { FILE_EXTENTION, INTERFACES_FILE_NAME } from '../constants.js';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
+import { isIgnore } from '../utils.js';
 
 export const generateInterfacesFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;

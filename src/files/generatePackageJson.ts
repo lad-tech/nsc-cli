@@ -1,8 +1,8 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
-import { isIgnore } from '../utils';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
+import { isIgnore } from '../utils.js';
 
 export const generatePackageJson: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { schema, directoryPath } = opts;
@@ -18,8 +18,8 @@ export const generatePackageJson: MiddlewareFn = async (opts: MiddlewareOptions)
     json.type = "module";
     json.main = "./dist/start.js";
     json.scripts = json.scripts || {};
-    json.scripts.start = "npx tsx start.ts",
-      json.scripts.build = "rm -rf ./dist && npx tsc",
+    json.scripts.start = "npx tsx start.ts";
+    json.scripts.build = "rm -rf ./dist && npx tsc";
       json.exports = {
         ".": {
           "import": "./dist/index.js",

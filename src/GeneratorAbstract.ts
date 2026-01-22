@@ -1,4 +1,4 @@
-import { ServiceSchema } from './interfaces';
+import { ServiceSchema } from './interfaces.js';
 
 export interface GeneratorSettings {
   schema: ServiceSchema;

@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import { format, Options } from 'prettier';
-import { ModuleKind, Project, ProjectOptions, QuoteKind, ScriptTarget } from 'ts-morph';
+import { ModuleKind, ModuleResolutionKind, Project, ProjectOptions, QuoteKind, ScriptTarget } from 'ts-morph';
 
 export const DefaultProjectSettings: ProjectOptions = {
   manipulationSettings: {
@@ -13,12 +13,13 @@ export const DefaultProjectSettings: ProjectOptions = {
     sourceMap: true,
     strictNullChecks: true,
     strict: true,
-    module: ModuleKind.CommonJS,
+    module: ModuleKind.ESNext,
+    moduleResolution: ModuleResolutionKind.Bundler,
     allowJs: false,
     resolveJsonModule: true,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
-    lib: ['es2019'],
+    lib: ['ES2022'],
   },
 };
 
@@ -28,13 +29,14 @@ export const BaseTsConfig = {
     sourceMap: true,
     strictNullChecks: true,
     strict: true,
-    module: 'commonjs',
-    target: 'es2019',
+    module: 'ESNext',
+    moduleResolution: 'bundler',
+    target: 'ES2022',
     allowJs: false,
     resolveJsonModule: true,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
-    lib: ['es2019'],
+    lib: ['ES2022'],
     typeRoots: ['../node_modules/@types', '../@types/'],
   },
   exclude: ['node_modules'],
@@ -55,7 +57,7 @@ export async function setStyleInProject(project: Project, prettierConfigPath?: s
     await fs.access(prettierConfigFilePath);
     const confFile = await fs.readFile(prettierConfigFilePath);
     prettierConf = JSON.parse(confFile.toString());
-  } catch (e) {
+  } catch {
     console.log('Use default style guide');
   }
   prettierConf['parser'] = 'babel-ts';

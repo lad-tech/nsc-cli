@@ -1,7 +1,7 @@
 import * as path from 'path';
-import { FILE_EXTENTION, START_FILE_NAME } from '../constants';
-import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
-import { isIgnore } from '../utils';
+import { FILE_EXTENTION, START_FILE_NAME } from '../constants.js';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
+import { isIgnore } from '../utils.js';
 
 export const generateStartFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, directoryPath } = opts;

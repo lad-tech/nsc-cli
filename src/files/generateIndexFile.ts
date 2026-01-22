@@ -6,9 +6,9 @@ import {
   INTERFACES_FILE_NAME,
   TOOLBELT_MODULE_NAME,
   TOOLKIT_MODULE_NAME,
-} from '../constants';
-import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
-import { isIgnore } from '../utils';
+} from '../constants.js';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
+import { isIgnore } from '../utils.js';
 
 export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath, schemaFileName } = opts;

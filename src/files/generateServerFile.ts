@@ -6,9 +6,9 @@ import {
   SyntaxKind,
   VariableDeclarationKind,
 } from 'ts-morph';
-import { FILE_EXTENTION, SERVICE_RUN_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
-import { MiddlewareFn, MiddlewareOptions, ServiceSchema } from '../interfaces';
-import { isIgnore } from '../utils';
+import { FILE_EXTENTION, SERVICE_RUN_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants.js';
+import { MiddlewareFn, MiddlewareOptions, ServiceSchema } from '../interfaces.js';
+import { isIgnore } from '../utils.js';
 
 export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;

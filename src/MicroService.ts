@@ -8,11 +8,11 @@ import {
   generatePackageJson,
   generateServerFile,
   generateStartFile,
-} from './files';
-import { GeneratorAbstract, GeneratorSettings } from './GeneratorAbstract';
-import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from './helpers';
+} from './files/index.js';
+import { GeneratorAbstract, GeneratorSettings } from './GeneratorAbstract.js';
+import { BaseTsConfig, DefaultProjectSettings, setStyleInProject } from './helpers/index.js';
 
-import { MiddlewareFn } from './interfaces';
+import { MiddlewareFn } from './interfaces.js';
 
 export class MicroService extends GeneratorAbstract {
   private middlewares: MiddlewareFn[] = [

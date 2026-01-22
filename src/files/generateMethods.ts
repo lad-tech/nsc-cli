@@ -1,8 +1,8 @@
 import fs from 'fs';
 import * as path from 'path';
 import { StructureKind, VariableDeclarationKind } from 'ts-morph';
-import { FILE_EXTENTION, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants';
-import { MiddlewareFn, MiddlewareOptions } from '../interfaces';
+import { FILE_EXTENTION, INTERFACES_FILE_NAME, TOOLKIT_MODULE_NAME } from '../constants.js';
+import { MiddlewareFn, MiddlewareOptions } from '../interfaces.js';
 
 export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Promise<void> => {
   const { project, schema, directoryPath } = opts;

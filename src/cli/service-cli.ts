@@ -4,9 +4,9 @@ import Ajv from 'ajv';
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ServiceSchema } from '../interfaces';
-import { MicroService } from '../MicroService';
-import * as ValidateSchema from '../serviceSchemaValidator.json';
+import { ServiceSchema } from '../interfaces.js';
+import { MicroService } from '../MicroService.js';
+import ValidateSchema from '../serviceSchemaValidator.json' with { type: 'json' };
 
 async function main() {
   try {
