@@ -1,6 +1,6 @@
 {
   "name": "@lad-tech/nsc-cli",
-  "version": "0.7.5",
+  "version": "2.0.0",
   "description": "",
   "types": "dist/types/index.d.ts",
   "scripts": {
