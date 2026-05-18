@@ -6,7 +6,7 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "rm -rf dist/ && tsc &&  chmod +x dist/cli/service-cli.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx tsx --test test/*.test.ts",
     "create-service": "tsx src/cli/service-cli.ts --schema fakeServicesDirectory/testService2/service.schema.json",
     "semantic-release": "semantic-release"
   },

@@ -1,6 +1,7 @@
 import * as path from 'path';
 import {
   ImportDeclarationStructure,
+  Node,
   PropertyAssignmentStructure,
   StructureKind,
   SyntaxKind,
@@ -54,9 +55,10 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     const service = existsFile
       .getFunctionOrThrow('main')
       .getDescendantsOfKind(SyntaxKind.NewExpression)
-      .find((ex: { getText: () => string | string[] }) => ex.getText().includes('Service'));
+      .find(ex => ex.getExpression().getText() === 'Service');
 
-    const ServiceArguments = service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getProperties();
+    const serviceConfig = service?.getArguments().find(Node.isObjectLiteralExpression);
+    const ServiceArguments = serviceConfig?.getProperties();
     const methodsArray = ServiceArguments?.find(
       arg => (arg.getStructure() as PropertyAssignmentStructure)?.name === 'methods',
     );
@@ -71,10 +73,10 @@ export const generateServerFile: MiddlewareFn = async (opts: MiddlewareOptions):
     if (hasEvents) {
       // в файле они отсутствуют
       if (!events) {
-        service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.addProperties('events');
+        serviceConfig?.addProperties('events');
       }
     } else {
-      service?.getDescendantsOfKind(SyntaxKind.ObjectLiteralExpression)?.[0]?.getProperty('events')?.remove();
+      serviceConfig?.getProperty('events')?.remove();
     }
 
     await existsFile.save();
