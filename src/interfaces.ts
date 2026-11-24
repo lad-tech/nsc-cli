@@ -30,6 +30,8 @@ export interface MethodDefinition {
     useStream?: {
       request?: boolean;
       response?: boolean;
+      maxRequestBytes?: number;
+      cancelOnDisconnect?: boolean;
     };
   }>;
 }

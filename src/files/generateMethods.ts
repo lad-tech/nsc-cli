@@ -67,17 +67,16 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
             ],
           },
 
-
           useStream
             ? {
-              kind: StructureKind.ImportDeclaration,
-              namedImports: ['Readable'],
-              moduleSpecifier: 'stream',
-            }
+                kind: StructureKind.ImportDeclaration,
+                namedImports: ['Readable'],
+                moduleSpecifier: 'stream',
+              }
             : '',
           {
             kind: StructureKind.ImportDeclaration,
-            namedImports: ['BaseMethod'],
+            namedImports: ['BaseMethod', { name: 'MethodContext', isTypeOnly: true }],
             moduleSpecifier: TOOLKIT_MODULE_NAME,
           },
           {
@@ -103,6 +102,11 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
                     name: 'payload',
                     type: requestT,
                   },
+                  {
+                    kind: StructureKind.Parameter,
+                    name: 'context',
+                    type: 'MethodContext',
+                  },
                 ],
               },
             ],
@@ -125,7 +129,7 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
           {
             kind: StructureKind.ImportDeclaration,
             namedImports: [methodName],
-            moduleSpecifier: `.`,
+            moduleSpecifier: './index.js',
           },
         ],
       },
@@ -157,26 +161,28 @@ export const generateMethods: MiddlewareFn = async (opts: MiddlewareOptions): Pr
         },
       ],
     });
-    test.applyTextChanges([
-      {
-        newText:
-          `describe('Проверка ${methodName}', () => {\n` +
-          '    beforeEach(jest.clearAllMocks);\n' +
-          `    test.skip('Успех', async () => {\n` +
-          '     // TODO  Написать тест \n' +
-          `          await new ${methodName}().handler.call(ctx, testData);` +
-          '      });\n' +
-          "  test.skip('Ошибка синхронизации', async () => {\n" +
-          "    // ctx.repository[].mockRejectedValue(new Error('runtime'));\n" +
-          `    await expect(new ${methodName}().handler.call(ctx, testData)).rejects.toThrow();\n` +
-          '  });' +
-          '})\n',
-        span: {
-          start: 350,
-          length: 100,
+    test.addVariableStatement({
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [
+        {
+          name: 'methodContext',
+          initializer: '{ signal: new AbortController().signal }',
         },
-      },
-    ]);
+      ],
+    });
+    test.addStatements(
+      `describe('Проверка ${methodName}', () => {\n` +
+        '    beforeEach(jest.clearAllMocks);\n' +
+        `    test.skip('Успех', async () => {\n` +
+        '     // TODO  Написать тест \n' +
+        `          await new ${methodName}().handler.call(ctx, testData, methodContext);` +
+        '      });\n' +
+        "  test.skip('Ошибка синхронизации', async () => {\n" +
+        "    // ctx.repository[].mockRejectedValue(new Error('runtime'));\n" +
+        `    await expect(new ${methodName}().handler.call(ctx, testData, methodContext)).rejects.toThrow();\n` +
+        '  });' +
+        '})\n',
+    );
 
     await test.save();
   }
