@@ -14,7 +14,7 @@
     "nsc-cli": "/dist/cli/service-cli.js"
   },
   "peerDependencies": {
-    "@lad-tech/nsc-toolkit": "^2.0.4",
+    "@lad-tech/nsc-toolkit": "^2.7.0",
     "prettier": "^3.0.0"
   },
   "devDependencies": {

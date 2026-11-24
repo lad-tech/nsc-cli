@@ -1,5 +1,11 @@
 import * as path from 'path';
-import { ImportSpecifierStructure, MethodDeclarationStructure, OptionalKind, StructureKind, VariableDeclarationKind } from 'ts-morph';
+import {
+  ImportSpecifierStructure,
+  MethodDeclarationStructure,
+  OptionalKind,
+  StructureKind,
+  VariableDeclarationKind,
+} from 'ts-morph';
 import {
   FILE_EXTENTION,
   INDEX_FILE_NAME,
@@ -51,12 +57,18 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
       name: method.action,
       isAsync: true,
       returnType: `Promise<${returnT}>`,
-      statements: `return this.request<${returnT}>(\`\${name}.\${methods.${methodName}.action}\`, payload, methods.${methodName});`,
+      statements: `return this.request<${returnT}>(\`\${name}.\${methods.${methodName}.action}\`, payload, methods.${methodName}, callOptions);`,
       parameters: [
         {
           kind: StructureKind.Parameter,
           name: 'payload',
           type: requestT,
+        },
+        {
+          kind: StructureKind.Parameter,
+          name: 'callOptions',
+          type: 'CallOptions',
+          hasQuestionToken: true,
         },
       ],
     });
@@ -87,14 +99,13 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
 
         {
           kind: StructureKind.ImportDeclaration,
-          defaultImport: "serviceSchema",
+          defaultImport: 'serviceSchema',
           moduleSpecifier: `./${schemaFileName}`,
           attributes: [
             {
               kind: StructureKind.ImportAttribute,
               name: 'type',
               value: 'json',
-
             },
           ],
         },
@@ -116,7 +127,7 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
 
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: ['Client', 'Baggage', 'CacheSettings'],
+          namedImports: ['Client', 'Baggage', 'CacheSettings', { name: 'CallOptions', isTypeOnly: true }],
           moduleSpecifier: TOOLKIT_MODULE_NAME,
         },
         {
@@ -132,10 +143,10 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
         },
         isUseStream
           ? {
-            kind: StructureKind.ImportDeclaration,
-            namedImports: ['Readable'],
-            moduleSpecifier: 'stream',
-          }
+              kind: StructureKind.ImportDeclaration,
+              namedImports: ['Readable'],
+              moduleSpecifier: 'stream',
+            }
           : '',
         {
           kind: StructureKind.Class,
@@ -144,8 +155,9 @@ export const generateIndexFile: MiddlewareFn = async (opts: MiddlewareOptions): 
           ctors: [
             {
               kind: StructureKind.Constructor,
-              statements: `super({ broker, serviceName: name, baggage, cache,loggerOutputFormatter ${hasEvents ? ',events' : ''
-                } ${schema.Ref?.$id ? ',Ref' : ''} }); `,
+              statements: `super({ broker, serviceName: name, baggage, cache,loggerOutputFormatter ${
+                hasEvents ? ',events' : ''
+              } ${schema.Ref?.$id ? ',Ref' : ''} }); `,
               parameters: [
                 {
                   kind: StructureKind.Parameter,
